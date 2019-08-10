@@ -23,7 +23,7 @@
   <parent>
     <groupId>fr.aesn.rade</groupId>
     <artifactId>rade</artifactId>
-    <version>0.11-SNAPSHOT</version>
+    <version>0.11</version>
   </parent>
   <artifactId>rade-batch</artifactId>
   <packaging>jar</packaging>
