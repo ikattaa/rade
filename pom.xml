@@ -654,30 +654,19 @@
     </license>
   </licenses>
   <developers>
-    <developer>
-      <id>mgimpel</id>
-      <name>Marc Gimpel</name>
-      <email>mgimpel@gmail.com</email>
-      <url>https://github.com/mgimpel</url>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>Europe/Paris</timezone>
-    </developer>
   </developers>
 
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>https://github.com/mgimpel/rade/issues</url>
+    <url>https://github.com/https-github-com-RadeTeam/rade/issues</url>
   </issueManagement>
   <ciManagement>
     <system>Jenkins</system>
     <url>https://jenkins.aesn.fr/jenkins/job/Rade_(master)/</url>
   </ciManagement>
   <scm>
-    <connection>scm:git:https://github.com/mgimpel/rade.git</connection>
-    <url>https://github.com/mgimpel/rade</url>
+    <connection>scm:git:https://github.com/https-github-com-RadeTeam/rade.git</connection>
+    <url>https://github.com/https-github-com-RadeTeam/rade</url>
     <tag>HEAD</tag>
   </scm>
 </project>
