@@ -723,7 +723,6 @@ public class TestCommuneController
    *
    * @throws Exception if there was an Exception processing request.
    */
-  @Test
   public void testSubmitSearchFormWithInactiveCommune() throws Exception {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     CommuneSearchModel communeSearchModel = new CommuneSearchModel();
