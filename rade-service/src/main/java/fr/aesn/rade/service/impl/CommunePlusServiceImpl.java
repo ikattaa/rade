@@ -175,17 +175,22 @@ public class CommunePlusServiceImpl
               "code={}, dept={}, region={}, bassin={}, name={}, date={}",
               code, dept, region, bassin, nameLike, date);
     List<CommunePlusWithGenealogie> communesPlus = new ArrayList<>();
-    if(code != null && !code.isEmpty()) { // Rechercher par code INSEE (ignorer dept, region, ...)
+    if(code != null && !code.isEmpty() && date != null) { // Rechercher par code INSEE (ignorer dept, region, ...)
       CommunePlusWithGenealogie communeGenealogie = getCommuneValidOnDateWithGenealogie(code, date);
       if(communeGenealogie != null) {
         communesPlus.add(communeGenealogie);
       }
       return communesPlus;
     }
-    // Rechercher les communes en fonction du nom, dept, region
+    // Rechercher les communes en fonction du code quand la date est null
     List<Commune> communes = null;
     String testname = (nameLike == null || nameLike.isEmpty() ? "%" : "%" + nameLike + "%");
-    if ((dept == null || dept.isEmpty()) && (region == null || region.isEmpty())) {
+    if (code != null  && date == null) {
+      // code is given and date is null
+      communes =   communeJpaDao.findByCodeInsee(code);
+    }
+    // Rechercher les communes en fonction du nom, dept, region
+    else if ((dept == null || dept.isEmpty()) && (region == null || region.isEmpty())) {
       // neither region or departement are given
       communes = (date == null ?
               communeJpaDao.findByDepartementLikeAndNomEnrichiLikeIgnoreCaseOrderByNomEnrichiAsc("%", testname) :

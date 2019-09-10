@@ -101,7 +101,7 @@ public class TestCommunePlusService
     communes = service.getCommuneByCriteria("91001",null,null,null,null,sdf.parse("1998-01-01"));
     assertEquals("Hibernate returned the wrong number of results",0,communes.size());
     communes = service.getCommuneByCriteria("91001","X","X","X","X",null);
-    assertEquals("Hibernate returned the wrong number of results",1,communes.size());
+    assertEquals("Hibernate returned the wrong number of results",0,communes.size());
     communes = service.getCommuneByCriteria(null,"91",null,null,null,null);
     assertEquals("Hibernate returned the wrong number of results",196,communes.size());
     communes = service.getCommuneByCriteria(null,"91",null,null,"éVi",null);

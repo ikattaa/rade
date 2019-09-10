@@ -19,6 +19,7 @@ package fr.aesn.rade.webapp.mvc.referentiel;
 
 import fr.aesn.rade.common.modelplus.CommunePlusWithGenealogie;
 import fr.aesn.rade.common.util.DateConversionUtils;
+import fr.aesn.rade.persist.model.Commune;
 import fr.aesn.rade.persist.model.Departement;
 import fr.aesn.rade.persist.model.Region;
 import fr.aesn.rade.service.CommunePlusService;
@@ -158,11 +159,16 @@ public class CommuneController {
     communeSearchModel.setCommunes(communes);
     communeSearchModel.setPage(1);
     if(communes.size() == 1) {
+      Commune commune1 = new Commune();
       CommunePlusWithGenealogie commune = communes.get(0);
-      Date date = communeSearchModel.getDateEffet();
+      commune1.setCodeInsee(commune.getCommunePlus().getCodeInsee());
+      Date testdate =commune.getCommunePlus().getFinValiditeCommuneInsee();
+      testdate = (testdate == null ? new Date()
+                                       : Date.from(DateConversionUtils.toZonedDateTime(testdate, null).minusDays(1).toInstant()));
+
       return "redirect:/referentiel/commune/"
              + commune.getCommunePlus().getCodeInsee()
-             + (date == null ? "" : "?date=" + DateConversionUtils.toUrlString(date));
+             + (testdate == null ? "" : "?date=" + DateConversionUtils.toUrlString(testdate));
     } else {
       return "redirect:/referentiel/commune/resultats?page=1";
     }

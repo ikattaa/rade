@@ -140,7 +140,7 @@ function validateForm() {
 							</tr>
 							<tr>
 								<td class="text-right"><form:label path="dateEffet"><spring:message code='communesearch.label.date'/>:</form:label></td>
-								<td><form:input type="date" path="dateEffet" onchange="getRegionsAndDepts();"/></td>
+								<td><form:input type="date" path="dateEffet" onclick="document.getElementById('dateEffet').value='';" onchange="getRegionsAndDepts();"/></td>
 							</tr>
 							<tr>
 								<td class="text-right" colspan="2">
