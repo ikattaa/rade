@@ -38,6 +38,7 @@ import fr.aesn.rade.persist.model.Region;
 import fr.aesn.rade.service.BassinService;
 import fr.aesn.rade.service.DepartementService;
 import fr.aesn.rade.service.RegionService;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -52,13 +53,13 @@ public class JsonController {
   public static final String REQUEST_MAPPING = "/referentiel/json";
 
   /** Region Service. */
-  @Autowired
+  @Autowired @Setter
   private RegionService regionService;
   /** Departement Service. */
-  @Autowired
+  @Autowired @Setter
   private DepartementService departementService;
   /** Bassin Service. */
-  @Autowired
+  @Autowired @Setter
   private BassinService bassinService;
 
   /**

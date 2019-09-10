@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import fr.aesn.rade.persist.model.Region;
 import fr.aesn.rade.service.RegionService;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -42,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(ReferentielController.REQUEST_MAPPING)
 public class ReferentielController {
   /** Service. */
-  @Autowired
+  @Autowired @Setter
   private RegionService regionService;
   /** RequestMapping for this Controller. */
   public static final String REQUEST_MAPPING = "/referentiel";

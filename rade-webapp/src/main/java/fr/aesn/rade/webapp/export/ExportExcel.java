@@ -53,12 +53,16 @@ public class ExportExcel
   @Override
   public void exportCommune(final OutputStream os,
                             final List<CommunePlusWithGenealogie> list) {
-    Workbook wb = buildCommuneWorkbook(list);
-    try {
-      wb.write(os);
-    } catch (IOException e) {
-      log.info("Erreur lors de la génération de l'export excel", e);
-    }
+      if(list != null && list.size() > 0){
+        Workbook wb = buildCommuneWorkbook(list);
+        try {
+          wb.write(os);
+        } catch (IOException e) {
+          log.info("Erreur lors de la génération de l'export excel", e);
+        }
+      }else{
+          log.info("Erreur lors de la génération de l'export excel : la liste de communes est vide");
+      }
   }
 
   /**
