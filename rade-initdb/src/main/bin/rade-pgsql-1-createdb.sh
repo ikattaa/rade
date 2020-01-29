@@ -20,8 +20,8 @@
 
 #. rade-db-init-parameters.sh
 sudo -i -u postgres psql -c "CREATE USER $PG_USER WITH NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD '$PG_PASSWORD';"
-sudo -i -u postgres createdb -O $DB_USER $PG_DATABASE
+sudo -i -u postgres createdb -O $PG_USER $PG_DATABASE
 #sed -i -e 's/^host/#host/g' /var/lib/pgsql/data/pg_hba.conf
-#echo "host    $PG_DATABASE          $DB_USER        127.0.0.1/32            md5" >> /var/lib/pgsql/data/pg_hba.conf
+#echo "host    $PG_DATABASE          $PG_USER        127.0.0.1/32            md5" >> /var/lib/pgsql/data/pg_hba.conf
 #systemctl restart postgresql
  
