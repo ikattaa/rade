@@ -57,7 +57,7 @@ public class TestHistoriqueCommuneInseeMapper {
    */
   @Test
   public void testMapping() throws ParseException, BindException {
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
     DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
     tokenizer.setDelimiter(",");
     FieldSet fieldSet = tokenizer.tokenize(TEST_LINE);
