@@ -94,6 +94,7 @@ public class TestHistoriqueCommuneInseeMapper {
   }
 
   /**
+   * TODO : mettre en place le test avec le fichier csv
    * Test mapping the whole Commune History file to import.
    * @throws Exception problem reading/mapping input file.
    */

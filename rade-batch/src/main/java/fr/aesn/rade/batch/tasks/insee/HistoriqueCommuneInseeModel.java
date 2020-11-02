@@ -221,10 +221,16 @@ public class HistoriqueCommuneInseeModel implements Serializable {
         return false;
       }
       Date eff = pairs.get(0).getDateEffet();
-      if (eff == null ) {
+      /* TODO vérifier si il faut remplacer nbcom :
+       * Integer nbcom = pairs.get(0).getParent().getNombreCommunes();
+      if (eff == null || nbcom == null) { */
+      if (eff == null){
         return false;
       }
-      if ( !"Roche-sur-Yon".equals(pairs.get(0).getParent().getNomClairTypographieRicheAp())) {
+      /* TODO vérifier si il faut remplacer nbcom :
+       * if (pairs.size() != nbcom
+              && */
+      if (!"Roche-sur-Yon".equals(pairs.get(0).getParent().getNomClairTypographieRicheAp())) {
         // Le 25/08/1964 Saint-André-d'Ornay (85195) et Bourg-sous-la-Roche-sur-Yon (85032)
         // ont fusionné avec Roche-sur-Yon (85191) mais tous les deux sont de rang=1 & nb=1
         return false;
