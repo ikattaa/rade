@@ -257,7 +257,7 @@ public class CommuneServiceImpl
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod100ChangementdeNom(final Date dateEffective,
+  public Commune mod10ChangementdeNom(final Date dateEffective,
                                        final Audit audit,
                                        final String codeInsee,
                                        final String tnccoff,

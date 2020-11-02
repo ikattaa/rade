@@ -34,12 +34,13 @@ import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 
 import org.springframework.core.io.ClassPathResource;
-
+import org.junit.Ignore;
 /**
  * JUnit Test for RegionMapper.
  *
  * @author Marc Gimpel (mgimpel@gmail.com)
  */
+//@Ignore
 public class TestHistoriqueCommuneInseeImportRules {
   private static List<HistoriqueCommuneInseeModel> historyList;
   /**
@@ -72,12 +73,12 @@ public class TestHistoriqueCommuneInseeImportRules {
    * @throws ParseException failed to parse date.
    */
   @Test
-  public void testBuildMod100List() throws ParseException {
+  public void testBuildMod10List() throws ParseException {
     List<HistoriqueCommuneInseeModel> testList = historyList;
-    testList = HistoriqueCommuneInseeImportRules.buildModFilteredList(testList, "100");
+    testList = HistoriqueCommuneInseeImportRules.buildModFilteredList(testList, "10");
     assertEquals(1339, testList.size());
     testList = filterList(historyList, "2017-01-01", "2018-01-01");
-    testList = HistoriqueCommuneInseeImportRules.buildModFilteredList(testList, "100");
+    testList = HistoriqueCommuneInseeImportRules.buildModFilteredList(testList, "10");
     assertEquals(16, testList.size());
   }
 

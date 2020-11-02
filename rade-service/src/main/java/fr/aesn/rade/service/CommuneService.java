@@ -117,7 +117,7 @@ public interface CommuneService {
    * @return the new Commune.
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
-  public Commune mod100ChangementdeNom(Date dateEffective, Audit audit,
+  public Commune mod10ChangementdeNom(Date dateEffective, Audit audit,
                                        String codeInsee, String tnccoff,
                                        String nccoff, String commentaire)
     throws InvalidArgumentException;

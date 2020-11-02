@@ -247,7 +247,7 @@ public class HistoriqueCommuneInseeImportRules {
     processModX10(dateFilteredList);
     processModX20(dateFilteredList);
     processModX30(dateFilteredList);
-    processMod100(dateFilteredList);
+    processMod10(dateFilteredList);
     processMod411(dateFilteredList); // 411 before 3xx
     processMod200(dateFilteredList);
     processMod210x230(dateFilteredList);
@@ -256,18 +256,18 @@ public class HistoriqueCommuneInseeImportRules {
     processMod311x321and331x332x333x341(dateFilteredList);
   }
 
-  public void processMod100(final List<HistoriqueCommuneInseeModel> fullList)
+  public void processMod10(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel> list = buildModFilteredList(fullList, "100");
-    log.debug("Processing MOD 100, # of elements: {}", list.size());
+    List<HistoriqueCommuneInseeModel> list = buildModFilteredList(fullList, "10");
+    log.debug("Processing MOD 10, # of elements: {}", list.size());
     for (HistoriqueCommuneInseeModel historique : list) {
       log.trace("Processing elements: {}", historique);
-      assert "100".equals(historique.getTypeModification()) : historique.getTypeModification();
-      communeService.mod100ChangementdeNom(historique.getDateEffet(),
+      assert "10".equals(historique.getTypeEvenCommune()) : historique.getTypeEvenCommune();
+      communeService.mod10ChangementdeNom(historique.getDateEffet(),
                                            batchAudit,
-                                           historique.getCodeDepartement() + historique.getCodeCommune(),
-                                           historique.getTypeNomClair(),
-                                           historique.getNomOfficiel(),
+                                           historique.getCodeCommuneAvantEven(),
+                                           historique.getTypeNomClairAp(),
+                                           historique.getNomClairTypographieRicheAp(),
                                            "");
     }
   }
@@ -562,7 +562,7 @@ public class HistoriqueCommuneInseeImportRules {
 
   public static final List<HistoriqueCommuneInseeModel> buildModFilteredList(final List<HistoriqueCommuneInseeModel> list, final String mod) {
     List<HistoriqueCommuneInseeModel> modlist = list.stream()
-              .filter(history -> history.getTypeModification().equals(mod))
+              .filter(history -> history.getTypeEvenCommune().equals(mod))
               .collect(Collectors.toList());
     log.debug("Filtered List MOD={} size: {}.", mod, modlist.size());
     return modlist;
