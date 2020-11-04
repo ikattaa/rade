@@ -427,18 +427,18 @@ public class CommuneServiceImpl
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod330x340FusionAssociation(final Date dateEffective,
+  public Commune mod33x34FusionAssociation(final Date dateEffective,
                                              final Audit audit,
-                                             final List<Commune> com330associe,
-                                             final Commune com340absorbant,
+                                             final List<Commune> com33associe,
+                                             final Commune com34absorbant,
                                              final String commentaire)
     throws InvalidArgumentException {
     return mergeCommunes(dateEffective,
                          audit,
-                         com330associe,
-                         com340absorbant,
+                         com33associe,
+                         com34absorbant,
                          commentaire,
-                         "340");
+                         "34");
   }
 
   /**
@@ -782,6 +782,7 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "Commune absorbé list cannot be null or empty.");
     }
+    
     if (comAbsorbant == null || comAbsorbant.getCodeInsee() == null
             || comAbsorbant.getDepartement() == null
             || comAbsorbant.getTypeNomClair() == null
