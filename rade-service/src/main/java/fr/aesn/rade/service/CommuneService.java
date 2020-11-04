@@ -135,7 +135,7 @@ public interface CommuneService {
    * @return the new Commune.
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
-  public Commune mod200Creation(Date dateEffective, Audit audit,
+  public Commune mod20Creation(Date dateEffective, Audit audit,
                                 String codeInsee, String departement,
                                 String tnccoff, String nccoff,
                                 String commentaire)

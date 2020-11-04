@@ -69,7 +69,7 @@ public class TestHistoriqueCommuneInseeImportRules {
   }
 
   /**
-   * Test Building Mod=100 list.
+   * Test Building Mod=10 list.
    * @throws ParseException failed to parse date.
    */
   @Test
@@ -83,16 +83,16 @@ public class TestHistoriqueCommuneInseeImportRules {
   }
 
   /**
-   * Test Building Mod=200 list.
+   * Test Building Mod=20 list.
    * @throws ParseException failed to parse date.
    */
   @Test
-  public void testBuildMod200List() throws ParseException {
+  public void testBuildMod20List() throws ParseException {
     List<HistoriqueCommuneInseeModel> testList = historyList;
-    testList = HistoriqueCommuneInseeImportRules.buildModFilteredList(testList, "200");
+    testList = HistoriqueCommuneInseeImportRules.buildModFilteredList(testList, "20");
     assertEquals(94, testList.size());
     testList = filterList(historyList, "2017-01-01", "2018-01-01");
-    testList = HistoriqueCommuneInseeImportRules.buildModFilteredList(testList, "200");
+    testList = HistoriqueCommuneInseeImportRules.buildModFilteredList(testList, "20");
     assertEquals(0, testList.size());
   }
 

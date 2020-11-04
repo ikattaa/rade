@@ -250,7 +250,7 @@ public class HistoriqueCommuneInseeImportRules {
     processModX30(dateFilteredList);
     processMod10(dateFilteredList);
     processMod411(dateFilteredList); // 411 before 3xx
-    processMod200(dateFilteredList);
+    processMod20(dateFilteredList);
     processMod210x230(dateFilteredList);
     processMod31x32(dateFilteredList);
     processMod330x340(dateFilteredList);
@@ -273,19 +273,19 @@ public class HistoriqueCommuneInseeImportRules {
     }
   }
 
-  public void processMod200(final List<HistoriqueCommuneInseeModel> fullList)
+  public void processMod20(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel> list = buildModFilteredList(fullList, "200");
-    log.debug("Processing MOD 200, # of elements: {}", list.size());
+    List<HistoriqueCommuneInseeModel> list = buildModFilteredList(fullList, "20");
+    log.debug("Processing MOD 20, # of elements: {}", list.size());
     for (HistoriqueCommuneInseeModel historique : list) {
       log.trace("Processing element: {}", historique);
-      assert "200".equals(historique.getTypeModification()) : historique.getTypeModification();
-      communeService.mod200Creation(historique.getDateEffet(),
+      assert "20".equals(historique.getTypeEvenCommune()) : historique.getTypeEvenCommune();
+      communeService.mod20Creation(historique.getDateEffet(),
                                     batchAudit,
-                                    historique.getCodeDepartement() + historique.getCodeCommune(),
-                                    historique.getCodeDepartement(),
-                                    historique.getTypeNomClair(),
-                                    historique.getNomOfficiel(),
+                                    historique.getCodeCommuneaprEven(),
+                                    historique.getCodeCommuneaprEven().substring(0, 2),
+                                    historique.getTypeNomClairAp(),
+                                    historique.getNomClairTypographieRicheAp(),
                                     "");
     }
   }

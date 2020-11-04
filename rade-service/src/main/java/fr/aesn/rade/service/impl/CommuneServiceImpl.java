@@ -244,7 +244,7 @@ public class CommuneServiceImpl
   }
 
   /**
-   * Changes the name (MOD=100 : Changement de Nom) of the Commune with the
+   * Changes the name (MOD=10 : Changement de Nom) of the Commune with the
    * given CodeInsee effective as of the given Date.
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
@@ -274,7 +274,7 @@ public class CommuneServiceImpl
   }
 
   /**
-   * Creates (MOD=200 : Creation) a new Commune with the given CodeInsee and
+   * Creates (MOD=20 : Creation) a new Commune with the given CodeInsee and
    * details, effective as of the given Date.
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
@@ -288,7 +288,7 @@ public class CommuneServiceImpl
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod200Creation(final Date dateEffective,
+  public Commune mod20Creation(final Date dateEffective,
                                 final Audit audit,
                                 final String codeInsee,
                                 final String departement,
@@ -303,7 +303,7 @@ public class CommuneServiceImpl
                          tnccoff,
                          nccoff,
                          commentaire,
-                         "200");
+                         "20");
   }
 
   /**
