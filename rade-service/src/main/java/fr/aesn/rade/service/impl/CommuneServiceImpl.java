@@ -307,22 +307,22 @@ public class CommuneServiceImpl
   }
 
   /**
-   * Recreates (MOD=210 : Retablissement, MOD=230 : Commune se separant) the
+   * Recreates (MOD=21 : Retablissement, MOD=21 : Commune se separant) the
    * given Commune from the given source Commune, effective as of the given
    * Date.
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
-   * @param com210retabli the new Commune.
-   * @param com230source the source Commune.
+   * @param com21retabli the new Commune.
+   * @param com21source the source Commune.
    * @param commentaire comment for the genealogie link.
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
   @Override
   @Transactional(readOnly = false)
-  public void mod210x230Retablissement(final Date dateEffective,
+  public void mod21Retablissement(final Date dateEffective,
                                        final Audit audit,
-                                       final Commune com210retabli,
-                                       final Commune com230source,
+                                       final Commune com21retabli,
+                                       final Commune com21source,
                                        final String commentaire)
     throws InvalidArgumentException {
     // validate arguments
@@ -330,62 +330,62 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "The date and audit are mandatory.");
     }
-    if (com210retabli == null || com210retabli.getCodeInsee() == null
-            || com210retabli.getDepartement() == null
-            || com210retabli.getTypeNomClair() == null
-            || com210retabli.getNomEnrichi() == null) {
+    if (com21retabli == null || com21retabli.getCodeInsee() == null
+            || com21retabli.getDepartement() == null
+            || com21retabli.getTypeNomClair() == null
+            || com21retabli.getNomEnrichi() == null) {
       throw new InvalidArgumentException(
               "A mandatory detail for Commune retabli (210) was null.");
     }
-    if (com210retabli.getId() != null) {
+    if (com21retabli.getId() != null) {
       throw new InvalidArgumentException(
               "Commune rétabli has an ID already set.");
     }
-    if (!dateEffective.equals(com210retabli.getDebutValidite())) {
+    if (!dateEffective.equals(com21retabli.getDebutValidite())) {
       throw new InvalidArgumentException(
               "Commune rétabli is not valid from the give date.");
     }
-    Commune commune = communeJpaDao.findByCodeInseeValidOnDate(com210retabli.getCodeInsee(), dateEffective);
+    Commune commune = communeJpaDao.findByCodeInseeValidOnDate(com21retabli.getCodeInsee(), dateEffective);
     if ((commune != null)) {
       throw new InvalidArgumentException(
               "Commune rétabli already exists for the given date.");
     }
-    if (com230source == null || com230source.getCodeInsee() == null
-            || com230source.getDepartement() == null
-            || com230source.getTypeNomClair() == null
-            || com230source.getNomEnrichi() == null) {
+    if (com21source == null || com21source.getCodeInsee() == null
+            || com21source.getDepartement() == null
+            || com21source.getTypeNomClair() == null
+            || com21source.getNomEnrichi() == null) {
       throw new InvalidArgumentException(
-              "A mandatory Commune detail for Commune source (230) was null.");
+              "A mandatory Commune detail for Commune source (21) was null.");
     }
-    log.info("Mod=210-230 (Retablissement) requested: date={}, code commune 210={}, code commune 230={}",
-             dateEffective, com210retabli.getCodeInsee(), com230source.getCodeInsee());
-    // update source commune (230).
-    Commune parentSource = invalidateCommune(com230source.getCodeInsee(), dateEffective);
-    com230source.setId(null);
-    com230source.setDebutValidite(dateEffective);
-    if (com230source.getNomMajuscule() == null) {
-      com230source.setNomMajuscule(StringConversionUtils.toUpperAsciiWithLookup(com230source.getNomEnrichi()));
+    log.info("Mod=21-21 (Retablissement) requested: date={}, code commune 21={}, code commune 21={}",
+             dateEffective, com21retabli.getCodeInsee(), com21source.getCodeInsee());
+    // update source commune (21).
+    Commune parentSource = invalidateCommune(com21source.getCodeInsee(), dateEffective);
+    com21source.setId(null);
+    com21source.setDebutValidite(dateEffective);
+    if (com21source.getNomMajuscule() == null) {
+      com21source.setNomMajuscule(StringConversionUtils.toUpperAsciiWithLookup(com21source.getNomEnrichi()));
     }
-    if (com230source.getArticleEnrichi() == null) {
-      com230source.setArticleEnrichi(com230source.getTypeNomClair().getArticle());
+    if (com21source.getArticleEnrichi() == null) {
+      com21source.setArticleEnrichi(com21source.getTypeNomClair().getArticle());
     }
-    if (com230source.getCommentaire() == null) {
-        com230source.setCommentaire("");
+    if (com21source.getCommentaire() == null) {
+        com21source.setCommentaire("");
     }
-    com230source.setAudit(audit);
-    Commune enfantSource = communeJpaDao.save(com230source);
-    buildGenealogie(parentSource, enfantSource, "230", commentaire);
+    com21source.setAudit(audit);
+    Commune enfantSource = communeJpaDao.save(com21source);
+    buildGenealogie(parentSource, enfantSource, "21", commentaire);
     // create new commune retabli
-    com210retabli.setAudit(audit);
-    if (com210retabli.getNomMajuscule() == null) {
-      com210retabli.setNomMajuscule(StringConversionUtils.toUpperAsciiWithLookup(com210retabli.getNomEnrichi()));
+    com21retabli.setAudit(audit);
+    if (com21retabli.getNomMajuscule() == null) {
+      com21retabli.setNomMajuscule(StringConversionUtils.toUpperAsciiWithLookup(com21retabli.getNomEnrichi()));
     }
-    if (com210retabli.getArticleEnrichi() == null && com210retabli.getTypeNomClair().getArticleMaj() != null) {
-      com210retabli.setArticleEnrichi(com210retabli.getTypeNomClair().getArticle());
+    if (com21retabli.getArticleEnrichi() == null && com21retabli.getTypeNomClair().getArticleMaj() != null) {
+      com21retabli.setArticleEnrichi(com21retabli.getTypeNomClair().getArticle());
     }
-    Commune enfantRetabli = communeJpaDao.save(com210retabli);
+    Commune enfantRetabli = communeJpaDao.save(com21retabli);
     // add genealogie
-    buildGenealogie(parentSource, enfantRetabli, "210", commentaire);
+    buildGenealogie(parentSource, enfantRetabli, "21", commentaire);
   }
 
   /**
