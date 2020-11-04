@@ -53,6 +53,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import fr.aesn.rade.common.util.DateConversionUtils;
 import fr.aesn.rade.webapp.RadeUiException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -217,14 +218,17 @@ public class BatchController {
    * @param locale locale in which to do the lookup.
    * @param model MVC model passed to JSP.
    * @param file the HTTP submitted file. 
+   * @param dateParam the HTTP submitted date. 
    * @return View for the page.
    * @throws IOException if there was a problem recovering and saving file.
    */
   @PostMapping("/historiqueinseeimport")
   public String importHistoriqueInseePost(final Locale locale,
                                           final Model model,
-                                          @RequestParam("file") final MultipartFile file)
+                                          @RequestParam("file") final MultipartFile file,@RequestParam(value = "debutValidite", required = false) final String dateParam)
     throws IOException {
+	Date defaultDate = Date.from(LocalDate.of(1999, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date dateDebut=DateConversionUtils.urlStringToDate(dateParam,defaultDate);
     log.debug("Posting to /batch/historiqueinseeimport");
     model.addAttribute("titre", messageSource.getMessage("batchresult.title.historiqueinsee", null, locale));
     Path tmpFile = storeTempFile(file);
@@ -233,9 +237,14 @@ public class BatchController {
     jobBuilder.addString("auditAuteur", "WebBatch");
     jobBuilder.addDate("auditDate", new Date());
     jobBuilder.addString("auditNote", "Import " + file.getOriginalFilename());
+    if(dateDebut!=null){
+    jobBuilder.addDate("debutValidite", dateDebut);
+    }else {
     jobBuilder.addDate("debutValidite", Date.from(LocalDate.of(1999, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+    }
     model.addAttribute("file", file);
     model.addAttribute("uri", tmpFile.toUri());
+    model.addAttribute("debutValidite",dateDebut);
     runAsynchronousJob(importHistoriqueInseeJob, jobBuilder.toJobParameters());
     model.addAttribute("message", "For more details see <a href=\"../actuator/logfile\" target=\"_blank\">log file</a>");
     return "admin/batchresult";
