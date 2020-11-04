@@ -28,6 +28,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import fr.aesn.rade.common.InvalidArgumentException;
+import fr.aesn.rade.common.util.StringConversionUtils;
 import fr.aesn.rade.persist.model.Audit;
 import fr.aesn.rade.persist.model.Commune;
 import fr.aesn.rade.service.CommuneService;
@@ -71,9 +72,9 @@ import lombok.extern.slf4j.Slf4j;
  * Ex: pour une fusion de plusieurs (plus que deux) communes
  * C'est le cas des modifications de types suivantes:
  * <ul>
- * <li>310-320: Fusion --
- *              NB: Chaque element 310 est regroupé avec un element 320 et vice
- *              versa. Les paires sont ensuite regroupé (COMECH du 320).</li>
+ * <li>31-32: Fusion --
+ *              NB: Chaque element 31 est regroupé avec un element 32 et vice
+ *              versa. Les paires sont ensuite regroupé (COMECH du 32).</li>
  * <li>311-321: Fusion - Commune nouvelle sans déléguée --
  *              NB: L'element 311 peut être regroupé avec 321 ou 341, par
  *              contre 341 est uniquement regroupé avec 311 (et 312 ?).
@@ -101,7 +102,7 @@ import lombok.extern.slf4j.Slf4j;
  * |  Description                                                 |Code|Associé|Action
  * +--------------------------------------------------------------+----+-------+-------------------
  * |Chgt de nom                                                    100          Traitement ligne simple
- * |Chgt de nom dû à une fusion (simple ou association)            110  310/320 N/A (traité par 310-320)
+ * |Chgt de nom dû à une fusion (simple ou association)            110  31/32 N/A (traité par 31-32)
  * |Chgt de nom (création de commune nouvelle)                     111  331/... N/A (traité par 331-332-333-311-312-341)
  * |Chgt de nom dû à un rétablissement                             120  210/230 N/A (traité par 210-230)
  * |Chgt de nom dû au chgt de chef-lieu                            130  ?       N/A
@@ -113,16 +114,16 @@ import lombok.extern.slf4j.Slf4j;
  * |Commune se séparant                                            230  210     Voir 210
  * |Création d'une fraction cantonale                              240          N/A
  * |Suppression commune suite à partition de territoire            300          N/A
- * |Fusion: commune absorbée                                       310  320     Voir 320
+ * |Fusion: commune absorbée                                       31  32     Voir 32
  * |Commune nouv.: commune non déléguée                            311  321/341 Voir 321 et 341
  * |Commune nouv.: commune préexist. non délég. restant non délég. 312  341     Voir 341
- * |Fusion: commune absorbante                                     320  310     Traitement ensemble de paires 310-320 (regroupement par COMECH du 320)
+ * |Fusion: commune absorbante                                     32  31     Traitement ensemble de paires 31-32 (regroupement par COMECH du 32)
  * |Commune nouv. sans délég.: commune-pôle                        321  311     Traitement ensemble de paires 311-321 (regroupement par COMECH du 321)
  * |Fusion - association: commune associée                         330  340     Voir 340
  * |Commune nouv.: commune délég.                                  331  341     Voir 341
  * |Commune nouv.: commune préexist. associée devenant délég.      332  341     Voir 341
  * |Commune nouv.: commune préexist. délég. restant délég.         333  341     Voir 341
- * |Fusion-association: commune absorbante                         340  330     Traitement ensemble de paires 310-320 (regroupement par COMECH du 340)
+ * |Fusion-association: commune absorbante                         340  330     Traitement ensemble de paires 31-32 (regroupement par COMECH du 340)
  * |Commune nouv. avec délég. : commune-pôle                       341  331     Traitement ensemble de paires 3xx-341 (regroupement par COMECH du 341)
  * |Fusion-assoc. se transf. en fusion simple (commune absorbée)   350  360     Voir 360
  * |Commune nouv.: suppression de commune préexistante             351          N/A
@@ -165,14 +166,14 @@ import lombok.extern.slf4j.Slf4j;
  * chronologique.</li>
  * <li>Regrouper les elements en groupe correspondant au type de modification
  * (100: groupe d'éléments simples, 200: groupe d'éléments simples,
- * 210-230: groupe de paires, 310-320: groupe d'ensembles de paires,
+ * 210-230: groupe de paires, 31-32: groupe d'ensembles de paires,
  * 311-321: groupe d'ensembles de paires, ...).</li>
  * <li>Pour chaque regroupement, iterer a travers les éléments et appliquer
  * le traitement correspondant
  * (100: pour chaque ligne/élément simple, faites le changement de nom,
  * 200: pour chaque ligne/élément simple, faites la creation,
  * 210-230: pour chaque paire, faites la séparation-retablissement,
- * 310-320: pour chaque ensemble, faites la fusion de tous les communes,
+ * 31-32: pour chaque ensemble, faites la fusion de tous les communes,
  * ...).</li>
  * </ol>
  *
@@ -251,7 +252,7 @@ public class HistoriqueCommuneInseeImportRules {
     processMod411(dateFilteredList); // 411 before 3xx
     processMod200(dateFilteredList);
     processMod210x230(dateFilteredList);
-    processMod310x320(dateFilteredList);
+    processMod31x32(dateFilteredList);
     processMod330x340(dateFilteredList);
     processMod311x321and331x332x333x341(dateFilteredList);
   }
@@ -265,7 +266,7 @@ public class HistoriqueCommuneInseeImportRules {
       assert "10".equals(historique.getTypeEvenCommune()) : historique.getTypeEvenCommune();
       communeService.mod10ChangementdeNom(historique.getDateEffet(),
                                            batchAudit,
-                                           historique.getCodeCommuneAvantEven(),
+                                           historique.getCodeCommuneaprEven(),
                                            historique.getTypeNomClairAp(),
                                            historique.getNomClairTypographieRicheAp(),
                                            "");
@@ -298,7 +299,9 @@ public class HistoriqueCommuneInseeImportRules {
       assert pair.isValid();
       assert "210".equals(pair.getEnfant().getTypeModification()) : pair.getEnfant().getTypeModification();
       assert "230".equals(pair.getParent().getTypeModification()) : pair.getParent().getTypeModification();
-      Commune com210retabli = buildCommune(pair.getEnfant());
+    //TODO 
+      //Commune com210retabli = buildCommune(pair.getEnfant());
+      Commune com210retabli = buildCommuneEnfant(pair.getEnfant());
       Commune com230source = buildCommune(pair.getParent());
       communeService.mod210x230Retablissement(pair.getDateEffet(),
                                               batchAudit,
@@ -308,29 +311,32 @@ public class HistoriqueCommuneInseeImportRules {
     }
   }
 
-  public void processMod310x320(final List<HistoriqueCommuneInseeModel> fullList)
+  public void processMod31x32(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "310", "320"), "320");
-    log.debug("Processing MOD 310 & 320, # of sets: {}", setList.size());
+    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "31", "32"), "32");
+    log.debug("Processing MOD 31 & 32, # of sets: {}", setList.size());
     for (HistoriqueCommuneInseeModel.Changeset set : setList) {
       log.trace("Processing set: {}", set);
       assert set.isValid();
       for(HistoriqueCommuneInseeModel.Pair pair : set.getPairs()) {
-        assert "310".equals(pair.getEnfant().getTypeModification()) : pair.getEnfant().getTypeModification();
-        assert "320".equals(pair.getParent().getTypeModification()) : pair.getParent().getTypeModification();
+    	  //TODO 
+       // assert "310".equals(pair.getEnfant().getTypeModification()) : pair.getEnfant().getTypeModification();
+        //assert "320".equals(pair.getParent().getTypeModification()) : pair.getParent().getTypeModification();
+        assert "31".equals(pair.getEnfant().getTypeEvenCommune()) : pair.getEnfant().getTypeEvenCommune();
+        assert "32".equals(pair.getParent().getTypeEvenCommune()) : pair.getParent().getTypeEvenCommune();
       }
-      List<Commune> com310absorbe = buildCommuneList(buildEnfantList(set));
-      Commune com320absorbant = buildCommune(set.getPairs().get(0).getParent());
+      List<Commune> com31absorbe = buildCommuneList(buildEnfantList(set));
+      Commune com32absorbant = buildCommune(set.getPairs().get(0).getParent());
       Commune test;
       for (HistoriqueCommuneInseeModel.Pair pair : set.getPairs()) {
         // Verify all parents have the same details
         test = buildCommune(pair.getParent());
-        assert com320absorbant.equals(test);
+        assert com32absorbant.equals(test);
       }
-      communeService.mod310x320Fusion(set.getDateEffet(),
+      communeService.mod31x32Fusion(set.getDateEffet(),
                                       batchAudit,
-                                      com310absorbe,
-                                      com320absorbant,
+                                      com31absorbe,
+                                      com32absorbant,
                                       null);
     }
   }
@@ -485,14 +491,33 @@ public class HistoriqueCommuneInseeImportRules {
 
   private Commune buildCommune(final HistoriqueCommuneInseeModel historique) {
     Commune commune = new Commune();
-    commune.setTypeEntiteAdmin(metadataService.getTypeEntiteAdmin("COM"));
-    commune.setCodeInsee(historique.getCodeDepartement() + historique.getCodeCommune());
-    commune.setDepartement(historique.getCodeDepartement());
-    commune.setTypeNomClair(metadataService.getTypeNomClair(historique.getTypeNomClair()));
-    commune.setNomEnrichi(historique.getNomOfficiel());
-    commune.setDebutValidite(historique.getDateEffet());
+		    commune.setTypeEntiteAdmin(metadataService.getTypeEntiteAdmin("COM"));
+		    commune.setDebutValidite(historique.getDateEffet());
+		    commune.setCodeInsee(historique.getCodeCommuneaprEven());
+		    commune.setDepartement(historique.getCodeCommuneaprEven().substring(0, 2));
+		    commune.setTypeNomClair(metadataService.getTypeNomClair(historique.getTypeNomClairAp()));
+		    commune.setNomEnrichi(historique.getNomClairTypographieRicheAp());
+		    commune.setNomMajuscule(historique.getNomClairMajAp());
+        
     return commune;
   }
+  /**
+   * 
+   * @param historique
+   * @return
+   */
+  private Commune buildCommuneEnfant(final HistoriqueCommuneInseeModel historique) {
+	    Commune commune = new Commune();
+			    commune.setTypeEntiteAdmin(metadataService.getTypeEntiteAdmin("COM"));
+			    commune.setDebutValidite(historique.getDateEffet());
+			    commune.setCodeInsee(historique.getCodeCommuneAvantEven());
+			    commune.setDepartement(historique.getCodeCommuneAvantEven().substring(0, 2));
+			    commune.setTypeNomClair(metadataService.getTypeNomClair(historique.getTypeNomClairAv()));
+			    commune.setNomEnrichi(historique.getNomClairTypographieRicheAv());
+			    commune.setNomMajuscule(historique.getNomClairMajAv());
+	    	    
+	    return commune;
+	  }
 
   private List<Commune> buildCommuneList(final List<HistoriqueCommuneInseeModel> historiqueList) {
     List<Commune> list = new ArrayList<>(historiqueList.size());
@@ -578,10 +603,21 @@ public class HistoriqueCommuneInseeImportRules {
     for (HistoriqueCommuneInseeModel m1 : mod1list) {
       parent = mod2list.stream()
               .filter(h -> m1.getDateEffet().equals(h.getDateEffet())
+                        && m1.getNomClairTypographieRicheAvecArticleAp().equals(h.getNomClairTypographieRicheAvecArticleAp())
+                        && m1.getCodeCommuneaprEven().equals(h.getCodeCommuneaprEven())
+                        && h.getCodeCommuneaprEven().equals(m1.getCodeCommuneaprEven()))
+              .collect(Collectors.toList());
+    //TODO 
+      
+      /**
+       *       parent = mod2list.stream()
+              .filter(h -> m1.getDateEffet().equals(h.getDateEffet())
                         && m1.getTexteLegislative().equals(h.getTexteLegislative())
                         && m1.getCommuneEchange().equals(h.getCodeDepartement() + h.getCodeCommune())
                         && h.getCommuneEchange().equals(m1.getCodeDepartement() + m1.getCodeCommune()))
               .collect(Collectors.toList());
+       */
+      
       assert parent.size() == 1;
       HistoriqueCommuneInseeModel.Pair pair =
         new HistoriqueCommuneInseeModel.Pair(parent.get(0), m1);
@@ -643,7 +679,7 @@ public class HistoriqueCommuneInseeImportRules {
     HistoriqueCommuneInseeModel.Pair pair;
     while (!list.isEmpty()) {
       pair = list.get(0);
-      assert pair.getParent().getTypeModification().equals(mod);
+      assert pair.getParent().getTypeEvenCommune().equals(mod);
       set = extractSet(list, pair);
       setlist.add(set);
       list.removeAll(set.getPairs());
