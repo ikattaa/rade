@@ -270,7 +270,7 @@ public class CommuneServiceImpl
                              tnccoff,
                              nccoff,
                              commentaire,
-                             "100");
+                             "10");
   }
 
   /**
@@ -389,7 +389,7 @@ public class CommuneServiceImpl
   }
 
   /**
-   * Merges (MOD=310 : Fusion Commune absorbe, MOD=320 : Fusion Commune
+   * Merges (MOD=31 : Fusion Commune absorbe, MOD=32 : Fusion Commune
    * absorbante) the given Communes, effective as of the given Date.
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
@@ -400,18 +400,18 @@ public class CommuneServiceImpl
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod310x320Fusion(final Date dateEffective,
+  public Commune mod31x32Fusion(final Date dateEffective,
                                   final Audit audit,
-                                  final List<Commune> com310absorbe,
-                                  final Commune com320absorbant,
+                                  final List<Commune> com31absorbe,
+                                  final Commune com32absorbant,
                                   final String commentaire)
     throws InvalidArgumentException {
     return mergeCommunes(dateEffective,
                          audit,
-                         com310absorbe,
-                         com320absorbant,
+                         com31absorbe,
+                         com32absorbant,
                          commentaire,
-                         "320");
+                         "32");
   }
 
   /**
@@ -801,7 +801,7 @@ public class CommuneServiceImpl
              mod,
              metadataService.getTypeGenealogieEntiteAdmin(mod).getLibelleCourt(),
              comAbsorbant.getCodeInsee(), dateEffective);
-    // create new Commune absorbant
+    // create new Commune absorbant close de la commune
     Commune parentAbsorbant = invalidateCommune(comAbsorbant.getCodeInsee(), dateEffective);
     comAbsorbant.setAudit(audit);
     if (comAbsorbant.getNomMajuscule() == null) {
@@ -811,6 +811,7 @@ public class CommuneServiceImpl
             && comAbsorbant.getTypeNomClair().getArticleMaj() != null) {
       comAbsorbant.setArticleEnrichi(comAbsorbant.getTypeNomClair().getArticle());
     }
+    // creation de la nouvelle commune
     Commune enfantAbsorbant = communeJpaDao.save(comAbsorbant);
     buildGenealogie(parentAbsorbant, enfantAbsorbant, mod, commentaire);
     Commune parentAbsorbe;
@@ -984,6 +985,7 @@ public class CommuneServiceImpl
               + commune.getDebutValidite());
     }
     commune.setFinValidite(dateEffective);
+    
     return communeJpaDao.save(commune);
   }
 }
