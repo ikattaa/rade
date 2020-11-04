@@ -168,9 +168,9 @@ public interface CommuneService {
    * @param commentaire comment for the genealogie link.
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
-  public Commune mod310x320Fusion(Date dateEffective, Audit audit,
-                                  List<Commune> com310absorbe,
-                                  Commune com320absorbant,
+  public Commune mod31x32Fusion(Date dateEffective, Audit audit,
+                                  List<Commune> com31absorbe,
+                                  Commune com32absorbant,
                                   String commentaire)
     throws InvalidArgumentException;
 
