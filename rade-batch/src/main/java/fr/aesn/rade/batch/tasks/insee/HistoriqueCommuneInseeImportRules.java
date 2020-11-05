@@ -248,7 +248,7 @@ public class HistoriqueCommuneInseeImportRules {
     processMod10(dateFilteredList);
     processMod41(dateFilteredList); // 411 before 3xx
     processMod20(dateFilteredList);
-    processMod210x230(dateFilteredList);
+    processMod21(dateFilteredList);
     processMod31x32(dateFilteredList);
     processMod33x34(dateFilteredList);
     processMod311x321and331x332x333x341(dateFilteredList);
@@ -287,23 +287,27 @@ public class HistoriqueCommuneInseeImportRules {
     }
   }
 
-  public void processMod210x230(final List<HistoriqueCommuneInseeModel> fullList)
+  public void processMod21(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel.Pair> pairList = buildModFilteredPairList(fullList, "210", "230");
-    log.debug("Processing MOD 210 & 230, # of pairs: {}", pairList.size());
+    List<HistoriqueCommuneInseeModel.Pair> pairList = buildModFilteredPairList(fullList, "21", "21");
+    log.debug("Processing MOD 21 & 21, # of pairs: {}", pairList.size());
     for (HistoriqueCommuneInseeModel.Pair pair : pairList) {
       log.trace("Processing pair: {}", pair);
       assert pair.isValid();
+      assert "21".equals(pair.getEnfant().getTypeEvenCommune()) : pair.getEnfant().getTypeEvenCommune();
+      /*
+       * TODO 
       assert "210".equals(pair.getEnfant().getTypeModification()) : pair.getEnfant().getTypeModification();
       assert "230".equals(pair.getParent().getTypeModification()) : pair.getParent().getTypeModification();
-    //TODO 
-      //Commune com210retabli = buildCommune(pair.getEnfant());
       Commune com210retabli = buildCommuneEnfant(pair.getEnfant());
       Commune com230source = buildCommune(pair.getParent());
-      communeService.mod210x230Retablissement(pair.getDateEffet(),
+       */
+      Commune com21retabli = buildCommuneEnfant(pair.getEnfant());
+      Commune com21source = buildCommune(pair.getParent());
+      communeService.mod21Retablissement(pair.getDateEffet(),
                                               batchAudit,
-                                              com210retabli,
-                                              com230source,
+                                              com21retabli,
+                                              com21source,
                                               null);
     }
   }

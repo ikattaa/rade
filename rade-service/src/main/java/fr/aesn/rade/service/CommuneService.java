@@ -152,9 +152,9 @@ public interface CommuneService {
    * @param commentaire comment for the genealogie link.
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
-  public void mod210x230Retablissement(Date dateEffective, Audit audit,
-                                       Commune com210retabli,
-                                       Commune com230source,
+  public void mod21Retablissement(Date dateEffective, Audit audit,
+                                       Commune com21retabli,
+                                       Commune com21source,
                                        String commentaire)
     throws InvalidArgumentException;
 

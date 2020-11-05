@@ -97,20 +97,20 @@ public class TestHistoriqueCommuneInseeImportRules {
   }
 
   /**
-   * Test Building Mod=210x230 list.
+   * Test Building Mod=21 list.
    * @throws ParseException failed to parse date.
    */
   @Test
-  public void testBuildMod210x230List() throws ParseException {
+  public void testBuildMod21List() throws ParseException {
     List<HistoriqueCommuneInseeModel> testList = historyList;
     List<HistoriqueCommuneInseeModel.Pair> pairList;
-    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "210", "230");
+    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "21", "21");
     assertEquals(251, pairList.size());
     for (HistoriqueCommuneInseeModel.Pair pair : pairList) {
       assertTrue(pair.isValid());
     }
     testList = filterList(historyList, "2017-01-01", "2018-01-01");
-    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "210", "230");
+    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "21", "21");
     assertEquals(1, pairList.size());
     for (HistoriqueCommuneInseeModel.Pair pair : pairList) {
       assertTrue(pair.isValid());
@@ -118,20 +118,20 @@ public class TestHistoriqueCommuneInseeImportRules {
   }
 
   /**
-   * Test Building Mod=310x320 list.
+   * Test Building Mod=31x32 list.
    * @throws ParseException failed to parse date.
    */
   @Test
-  public void testBuildMod310x320List() throws ParseException {
+  public void testBuildMod31x32List() throws ParseException {
     List<HistoriqueCommuneInseeModel> testList = historyList;
     List<HistoriqueCommuneInseeModel.Pair> pairList;
-    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "310", "320");
+    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "31", "32");
     assertEquals(715, pairList.size());
     for (HistoriqueCommuneInseeModel.Pair pair : pairList) {
       assertTrue(pair.isValid());
     }
     testList = filterList(historyList, "2017-01-01", "2018-01-01");
-    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "310", "320");
+    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "31", "32");
     assertEquals(0, pairList.size());
     for (HistoriqueCommuneInseeModel.Pair pair : pairList) {
       assertTrue(pair.isValid());
@@ -164,16 +164,16 @@ public class TestHistoriqueCommuneInseeImportRules {
    * @throws ParseException failed to parse date.
    */
   @Test
-  public void testBuildMod330x340List() throws ParseException {
+  public void testBuildMod33x34List() throws ParseException {
     List<HistoriqueCommuneInseeModel> testList = historyList;
     List<HistoriqueCommuneInseeModel.Pair> pairList;
-    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "330", "340");
+    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "33", "34");
     assertEquals(1043, pairList.size());
     for (HistoriqueCommuneInseeModel.Pair pair : pairList) {
       assertTrue(pair.isValid());
     }
     testList = filterList(historyList, "2017-01-01", "2018-01-01");
-    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "330", "340");
+    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "33", "34");
     assertEquals(0, pairList.size());
     for (HistoriqueCommuneInseeModel.Pair pair : pairList) {
       assertTrue(pair.isValid());
@@ -202,17 +202,17 @@ public class TestHistoriqueCommuneInseeImportRules {
   }
 
   /**
-   * Test Building Mod=310x320 set.
+   * Test Building Mod=31x32 set.
    * @throws ParseException failed to parse date.
    */
   @Test
-  public void testBuildMod310x320Set() throws ParseException {
+  public void testBuildMod31x32Set() throws ParseException {
     List<HistoriqueCommuneInseeModel> testList = historyList;
     List<HistoriqueCommuneInseeModel.Pair> pairList;
     List<HistoriqueCommuneInseeModel.Changeset> pairSet;
-    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "310", "320");
+    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "31", "32");
     int pairListSize = pairList.size();
-    pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "320");
+    pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "32");
     assertEquals(620, pairSet.size());
     int count = 0;
     for (HistoriqueCommuneInseeModel.Changeset set : pairSet) {
@@ -221,9 +221,9 @@ public class TestHistoriqueCommuneInseeImportRules {
     }
     assertEquals(pairListSize, count);
     testList = filterList(historyList, "2017-01-01", "2018-01-01");
-    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "310", "320");
+    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "31", "32");
     pairListSize = pairList.size();
-    pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "320");
+    pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "32");
     assertEquals(0, pairSet.size());
     count = 0;
     for (HistoriqueCommuneInseeModel.Changeset set : pairSet) {
@@ -270,13 +270,13 @@ public class TestHistoriqueCommuneInseeImportRules {
    * @throws ParseException failed to parse date.
    */
   @Test
-  public void testBuildMod330x340Set() throws ParseException {
+  public void testBuildMod33x34Set() throws ParseException {
     List<HistoriqueCommuneInseeModel> testList = historyList;
     List<HistoriqueCommuneInseeModel.Pair> pairList;
     List<HistoriqueCommuneInseeModel.Changeset> pairSet;
-    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "330", "340");
+    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "33", "34");
     int pairListSize = pairList.size();
-    pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "340");
+    pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "34");
     assertEquals(686, pairSet.size());
     int count = 0;
     for (HistoriqueCommuneInseeModel.Changeset set : pairSet) {
@@ -285,9 +285,9 @@ public class TestHistoriqueCommuneInseeImportRules {
     }
     assertEquals(pairListSize, count);
     testList = filterList(historyList, "2017-01-01", "2018-01-01");
-    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "330", "340");
+    pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "33", "34");
     pairListSize = pairList.size();
-    pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "340");
+    pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "34");
     assertEquals(0, pairSet.size());
     count = 0;
     for (HistoriqueCommuneInseeModel.Changeset set : pairSet) {
