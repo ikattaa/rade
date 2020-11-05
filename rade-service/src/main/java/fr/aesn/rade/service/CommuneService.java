@@ -192,41 +192,6 @@ public interface CommuneService {
     throws InvalidArgumentException;
 
   /**
-   * Merges (MOD=311 : Commune nouvelle non deleguee, MOD=321 : Commune
-   * nouvelle sans deleguee) the given Communes, effective as of the given
-   * Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param com311 list of absorbed Commune.
-   * @param com321nouvelle the new/absorbing Commune.
-   * @param commentaire comment for the genealogie link.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  public Commune mod311x321FusionSansDeleguee(Date dateEffective, Audit audit,
-                                              List<Commune> com311,
-                                              Commune com321nouvelle,
-                                              String commentaire)
-    throws InvalidArgumentException;
-
-  /**
-   * Merges (MOD=331,332,333,311,312 : Commune absorbe, MOD=341 : Commune
-   * nouvelle avec deleguee) the given Communes, effective as of the given
-   * Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param com331x332x333 list of absorbed Commune.
-   * @param com341nouvelle the new/absorbing Commune.
-   * @param commentaire comment for the genealogie link.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  public Commune mod331x332x333x341FusionAvecDeleguee(Date dateEffective,
-                                                      Audit audit,
-                                                      List<Commune> com331x332x333,
-                                                      Commune com341nouvelle,
-                                                      String commentaire)
-    throws InvalidArgumentException;
-
-  /**
    * Changes the departement (MOD=41 : Changement de departement) that the
    * Commune belongs to (NB: this involves changing it's codeInsee).
    * @param dateEffective the date that the change takes effect.
@@ -243,52 +208,5 @@ public interface CommuneService {
                                       String oldCodeInsee, String commentaire)
     throws InvalidArgumentException;
 
-  /**
-   * Changes the name (MOD=X10 : Changement d'orthographe) of the Commune with
-   * the given CodeInsee effective as of the given Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param codeInsee the code of Commune to change.
-   * @param tnccoff the type of the official new name.
-   * @param nccoff the official new name.
-   * @param commentaire comment for the genealogie link.
-   * @return the new Commune.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  public Commune modX10ChangementdeNom(Date dateEffective, Audit audit,
-                                       String codeInsee, String tnccoff,
-                                       String nccoff, String commentaire)
-    throws InvalidArgumentException;
 
-  /**
-   * Creates (MOD=X20 : Creation) a new Commune with the given CodeInsee and
-   * details, effective as of the given Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param codeInsee the code of the new Commune.
-   * @param departement the departement to which the new Commune belongs.
-   * @param tnccoff the type of the official name.
-   * @param nccoff the official name.
-   * @param commentaire comment for the new Commune.
-   * @return the new Commune.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  public Commune modX20Creation(Date dateEffective, Audit audit,
-                                String codeInsee, String departement,
-                                String tnccoff, String nccoff,
-                                String commentaire)
-    throws InvalidArgumentException;
-
-  /**
-   * Removes the Commune (MOD=X30 : Supression).
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param codeInsee the code of the Commune to remove.
-   * @param commentaire comment.
-   * @return the invalidated commune.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  public Commune modX30Suppression(Date dateEffective, Audit audit,
-                                   String codeInsee, String commentaire)
-    throws InvalidArgumentException;
 }

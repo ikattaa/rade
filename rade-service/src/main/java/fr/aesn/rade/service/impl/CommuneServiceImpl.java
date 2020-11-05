@@ -441,59 +441,6 @@ public class CommuneServiceImpl
                          "34");
   }
 
-  /**
-   * Merges (MOD=311 : Commune nouvelle non deleguee, MOD=321 : Commune
-   * nouvelle sans deleguee) the given Communes, effective as of the given
-   * Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param com311 list of absorbed Commune.
-   * @param com321nouvelle the new/absorbing Commune.
-   * @param commentaire comment for the genealogie link.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  @Override
-  @Transactional(readOnly = false)
-  public Commune mod311x321FusionSansDeleguee(final Date dateEffective,
-                                              final Audit audit,
-                                              final List<Commune> com311,
-                                              final Commune com321nouvelle,
-                                              final String commentaire)
-    throws InvalidArgumentException {
-    return mergeCommunes(dateEffective,
-                         audit,
-                         com311,
-                         com321nouvelle,
-                         commentaire,
-                         "321");
-  }
-
-  /**
-   * Merges (MOD=331,332,333,311,312 : Commune absorbe, MOD=341 : Commune
-   * nouvelle avec deleguee) the given Communes, effective as of the given
-   * Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param com331x332x333 list of absorbed Commune.
-   * @param com341nouvelle the new/absorbing Commune.
-   * @param commentaire comment for the genealogie link.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  @Override
-  @Transactional(readOnly = false)
-  public Commune mod331x332x333x341FusionAvecDeleguee(final Date dateEffective,
-                                                      final Audit audit,
-                                                      final List<Commune> com331x332x333,
-                                                      final Commune com341nouvelle,
-                                                      final String commentaire)
-    throws InvalidArgumentException {
-    return mergeCommunes(dateEffective,
-                         audit,
-                         com331x332x333,
-                         com341nouvelle,
-                         commentaire,
-                         "341");
-  }
 
   /**
    * Changes the departement (MOD=41 : Changement de departement) that the
