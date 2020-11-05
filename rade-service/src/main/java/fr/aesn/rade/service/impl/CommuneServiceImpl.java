@@ -496,7 +496,7 @@ public class CommuneServiceImpl
   }
 
   /**
-   * Changes the departement (MOD=411 : Changement de departement) that the
+   * Changes the departement (MOD=41 : Changement de departement) that the
    * Commune belongs to (NB: this involves changing it's codeInsee).
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
@@ -509,7 +509,7 @@ public class CommuneServiceImpl
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod411ChangementDept(final Date dateEffective,
+  public Commune mod41ChangementDept(final Date dateEffective,
                                       final Audit audit,
                                       final String codeInsee,
                                       final String departement,
@@ -529,7 +529,7 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "There is already a Commune with the given codeInsee valid at the dateEffective");
     }
-    log.info("Mod=411 (Changement de Departement) requested: date={}, new code commune={}, old code commune={}",
+    log.info("Mod=41 (Changement de Departement) requested: date={}, new code commune={}, old code commune={}",
              dateEffective, codeInsee, oldCodeInsee);
     // invalidate old commune
     Commune parent = invalidateCommune(oldCodeInsee, dateEffective);
@@ -544,101 +544,8 @@ public class CommuneServiceImpl
     newCommune.setAudit(audit);
     Commune enfant = communeJpaDao.save(newCommune);
     // add genealogie
-    buildGenealogie(parent, enfant, "411", commentaire);
+    buildGenealogie(parent, enfant, "41", commentaire);
     return getCommuneById(enfant.getId());
-  }
-
-  /**
-   * Changes the name (MOD=X10 : Changement d'orthographe) of the Commune with
-   * the given CodeInsee effective as of the given Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param codeInsee the code of Commune to change.
-   * @param tnccoff the type of the official new name.
-   * @param nccoff the official new name.
-   * @param commentaire comment for the genealogie link.
-   * @return the new Commune.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  @Override
-  @Transactional(readOnly = false)
-  public Commune modX10ChangementdeNom(final Date dateEffective,
-                                       final Audit audit,
-                                       final String codeInsee,
-                                       final String tnccoff,
-                                       final String nccoff,
-                                       final String commentaire)
-    throws InvalidArgumentException {
-    return changeCommuneName(dateEffective,
-                             audit,
-                             codeInsee,
-                             tnccoff,
-                             nccoff,
-                             commentaire,
-                             "X10");
-  }
-
-  /**
-   * Creates (MOD=X20 : Creation) a new Commune with the given CodeInsee and
-   * details, effective as of the given Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param codeInsee the code of the new Commune.
-   * @param departement the departement to which the new Commune belongs.
-   * @param tnccoff the type of the official name.
-   * @param nccoff the official name.
-   * @param commentaire comment for the new Commune.
-   * @return the new Commune.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  @Override
-  @Transactional(readOnly = false)
-  public Commune modX20Creation(final Date dateEffective,
-                                final Audit audit,
-                                final String codeInsee,
-                                final String departement,
-                                final String tnccoff,
-                                final String nccoff,
-                                final String commentaire)
-    throws InvalidArgumentException {
-    return createCommune(dateEffective,
-                         audit,
-                         codeInsee,
-                         departement,
-                         tnccoff,
-                         nccoff,
-                         commentaire,
-                         "X20");
-  }
-
-  /**
-   * Removes the Commune (MOD=X30 : Suppression).
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param codeInsee the code of the Commune to remove.
-   * @param commentaire comment.
-   * @return the invalidated commune.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  public Commune modX30Suppression(Date dateEffective, Audit audit,
-                                   String codeInsee, String commentaire)
-    throws InvalidArgumentException {
-    // validate arguments
-    if (dateEffective == null || audit == null) {
-      throw new InvalidArgumentException("The date and audit are mandatory.");
-    }
-    if (codeInsee == null) {
-      throw new InvalidArgumentException("The codeInsee is mandatory.");
-    }
-    Commune commune = getCommuneByCode(codeInsee, dateEffective);
-    if ((commune == null)) {
-      throw new InvalidArgumentException(
-              "There is no Commune with the given codeInsee valid at the dateEffective");
-    }
-    log.info("Mod=XXX (Suppression) requested: date={}, code commune={}",
-             dateEffective, codeInsee);
-    // invalidate old commune
-    return invalidateCommune(codeInsee, dateEffective);
   }
 
   /**

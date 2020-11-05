@@ -245,11 +245,8 @@ public class HistoriqueCommuneInseeImportRules {
     List<HistoriqueCommuneInseeModel> dateFilteredList =
       filterListByDate(list, date);
     // Order is important
-    processModX10(dateFilteredList);
-    processModX20(dateFilteredList);
-    processModX30(dateFilteredList);
     processMod10(dateFilteredList);
-    processMod411(dateFilteredList); // 411 before 3xx
+    processMod41(dateFilteredList); // 411 before 3xx
     processMod20(dateFilteredList);
     processMod210x230(dateFilteredList);
     processMod31x32(dateFilteredList);
@@ -431,66 +428,19 @@ public class HistoriqueCommuneInseeImportRules {
     }
   }
 
-  public void processMod411(final List<HistoriqueCommuneInseeModel> fullList)
+  public void processMod41(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel> list = buildModFilteredList(fullList, "411");
-    log.debug("Processing MOD 411, # of elements: {}", list.size());
+    List<HistoriqueCommuneInseeModel> list = buildModFilteredList(fullList, "41");
+    log.debug("Processing MOD 41, # of elements: {}", list.size());
     for (HistoriqueCommuneInseeModel historique : list) {
       log.trace("Processing element: {}", historique);
-      assert "411".equals(historique.getTypeModification()) : historique.getTypeModification();
-      communeService.mod411ChangementDept(historique.getDateEffet(),
+      assert "41".equals(historique.getTypeEvenCommune()) : historique.getTypeEvenCommune();
+      communeService.mod41ChangementDept(historique.getDateEffet(),
                                           batchAudit,
-                                          historique.getCodeDepartement() + historique.getCodeCommune(),
-                                          historique.getCodeDepartement(),
-                                          historique.getAncienCommuneChgmtDept(),
+                                          historique.getCodeCommuneaprEven(),
+                                          historique.getCodeCommuneaprEven().substring(0,2),
+                                          historique.getTypeCommuneAvantEven(),
                                           null);
-    }
-  }
-
-  public void processModX10(final List<HistoriqueCommuneInseeModel> fullList)
-    throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel> list = buildModFilteredList(fullList, "X10");
-    log.debug("Processing MOD X10, # of elements: {}", list.size());
-    for (HistoriqueCommuneInseeModel historique : list) {
-      log.trace("Processing elements: {}", historique);
-      assert "X10".equals(historique.getTypeModification()) : historique.getTypeModification();
-      communeService.modX10ChangementdeNom(historique.getDateEffet(),
-                                           batchAudit,
-                                           historique.getCodeDepartement() + historique.getCodeCommune(),
-                                           historique.getTypeNomClair(),
-                                           historique.getNomOfficiel(),
-                                           "");
-    }
-  }
-
-  public void processModX20(final List<HistoriqueCommuneInseeModel> fullList)
-    throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel> list = buildModFilteredList(fullList, "X20");
-    log.debug("Processing MOD X20, # of elements: {}", list.size());
-    for (HistoriqueCommuneInseeModel historique : list) {
-      log.trace("Processing element: {}", historique);
-      assert "X20".equals(historique.getTypeModification()) : historique.getTypeModification();
-      communeService.modX20Creation(historique.getDateEffet(),
-                                    batchAudit,
-                                    historique.getCodeDepartement() + historique.getCodeCommune(),
-                                    historique.getCodeDepartement(),
-                                    historique.getTypeNomClair(),
-                                    historique.getNomOfficiel(),
-                                    "");
-    }
-  }
-
-  public void processModX30(final List<HistoriqueCommuneInseeModel> fullList)
-    throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel> list = buildModFilteredList(fullList, "X30");
-    log.debug("Processing MOD X30, # of elements: {}", list.size());
-    for (HistoriqueCommuneInseeModel historique : list) {
-      log.trace("Processing element: {}", historique);
-      assert "X30".equals(historique.getTypeModification()) : historique.getTypeModification();
-      communeService.modX30Suppression(historique.getDateEffet(),
-                                       batchAudit,
-                                       historique.getCodeDepartement() + historique.getCodeCommune(),
-                                       null);
     }
   }
 

@@ -227,7 +227,7 @@ public interface CommuneService {
     throws InvalidArgumentException;
 
   /**
-   * Changes the departement (MOD=411 : Changement de departement) that the
+   * Changes the departement (MOD=41 : Changement de departement) that the
    * Commune belongs to (NB: this involves changing it's codeInsee).
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
@@ -238,7 +238,7 @@ public interface CommuneService {
    * @return the new Commune.
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
-  public Commune mod411ChangementDept(Date dateEffective, Audit audit,
+  public Commune mod41ChangementDept(Date dateEffective, Audit audit,
                                       String codeInsee, String departement,
                                       String oldCodeInsee, String commentaire)
     throws InvalidArgumentException;
