@@ -91,6 +91,7 @@ public class TestHistoriqueCommuneInseeMapper {
                	 "Valserhône",historique.getNomClairTypographieRicheAp());
     assertEquals("Entity doesn't match expected null value",
     		     "Valserhône",historique.getNomClairTypographieRicheAvecArticleAp());
+  
   }
 
   /**
@@ -98,11 +99,12 @@ public class TestHistoriqueCommuneInseeMapper {
    * Test mapping the whole Commune History file to import.
    * @throws Exception problem reading/mapping input file.
    */
-  @Ignore@Test
+ // @Ignore
+  @Test
   public void testMappingFile() throws Exception {
     // Configure and open ItemReader (reading test input file)
     FlatFileItemReader<HistoriqueCommuneInseeModel> reader = new FlatFileItemReader<>();
-    reader.setResource(new ClassPathResource("batchfiles/insee/historiq2018.txt"));
+    reader.setResource(new ClassPathResource("batchfiles/insee/historiq2020.csv"));
     reader.setLinesToSkip(1);
     DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
     tokenizer.setDelimiter(",");
@@ -111,7 +113,7 @@ public class TestHistoriqueCommuneInseeMapper {
     lineMapper.setLineTokenizer(tokenizer);
     reader.setLineMapper(lineMapper);
     reader.afterPropertiesSet();
-    ExecutionContext ec = new ExecutionContext();
+   ExecutionContext ec = new ExecutionContext();
     reader.open(ec);
     // Configure Validator and validate (@Size, @Min, ...) each line
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -126,6 +128,7 @@ public class TestHistoriqueCommuneInseeMapper {
     }
     // Check all records from input file have been read
     assertNull(record);
-    assertEquals("Didn't read all the file", 16290, records.size());
+    assertEquals("Didn't read all the file", 13156, records.size());
+    
   }
 }

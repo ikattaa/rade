@@ -35,12 +35,13 @@ import fr.aesn.rade.persist.model.CommuneSandre;
 import fr.aesn.rade.service.BassinService;
 
 import org.springframework.batch.item.file.transform.FieldSet;
-
+import org.junit.Ignore;
 /**
  * JUnit Test for CommuneSandreMapper.
  *
  * @author Marc Gimpel (mgimpel@gmail.com)
  */
+@Ignore
 public class TestCommuneSandreMapper {
   /** Test line from the Sandre Commune file to import. */
   public static final String TEST_LINE_LONG =

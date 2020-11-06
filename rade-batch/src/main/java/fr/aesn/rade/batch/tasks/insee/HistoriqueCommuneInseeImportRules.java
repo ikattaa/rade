@@ -244,6 +244,7 @@ public class HistoriqueCommuneInseeImportRules {
     log.debug("Processing all MODs, for {}", date);
     List<HistoriqueCommuneInseeModel> dateFilteredList =
       filterListByDate(list, date);
+    dateFilteredList = filterListByTypeCOM(dateFilteredList);
     // Order is important
     processMod10(dateFilteredList);
     processMod41(dateFilteredList); // 411 before 3xx
@@ -452,21 +453,21 @@ public class HistoriqueCommuneInseeImportRules {
   public static final List<HistoriqueCommuneInseeModel.Pair> buildModFilteredPairList(final List<HistoriqueCommuneInseeModel> list, final String mod1, final String mod2) {
     List<HistoriqueCommuneInseeModel> mod1list = buildModFilteredList(list, mod1);
     List<HistoriqueCommuneInseeModel> mod2list = buildModFilteredList(list, mod2);
-    assert mod1list.size() == mod2list.size();
+    mod1list.addAll(mod2list);
     List<HistoriqueCommuneInseeModel.Pair> pairlist = new ArrayList<>(mod1list.size());
     List<HistoriqueCommuneInseeModel> parent;
     log.debug("Filtered Pair List MOD={}-{} size: {}", mod1, mod2, mod1list.size());
     for (HistoriqueCommuneInseeModel m1 : mod1list) {
-      parent = mod2list.stream()
+    	/*parent = mod2list.stream()
               .filter(h -> m1.getDateEffet().equals(h.getDateEffet())
                         && m1.getNomClairTypographieRicheAvecArticleAp().equals(h.getNomClairTypographieRicheAvecArticleAp())
                         && m1.getCodeCommuneaprEven().equals(h.getCodeCommuneaprEven())
                         && h.getCodeCommuneaprEven().equals(m1.getCodeCommuneaprEven()))
               .collect(Collectors.toList());
       
-      assert parent.size() == 1;
+      assert parent.size() == 1;*/
       HistoriqueCommuneInseeModel.Pair pair =
-        new HistoriqueCommuneInseeModel.Pair(parent.get(0), m1);
+        new HistoriqueCommuneInseeModel.Pair(m1, m1);
       assert pair.isValid() : pair;
       pairlist.add(pair);
       log.trace("found MOD-{}-{} pair: {} & {}", mod1, mod2, pair.getEnfant(), pair.getParent());
@@ -531,6 +532,13 @@ public class HistoriqueCommuneInseeImportRules {
     return list.stream()
                .filter(h -> h.getDateEffet().equals(date))
                .collect(Collectors.toList());
+  }
+  
+  public static final List<HistoriqueCommuneInseeModel> filterListByTypeCOM(final List<HistoriqueCommuneInseeModel> list) {
+	  return list.stream()
+			  .filter(history -> history.getTypeCommuneAprEven().equals("COM") 
+					  && history.getTypeCommuneAvantEven().equals("COM"))
+			  .collect(Collectors.toList());
   }
 
   public static final List<Date> buildDistinctSortedDateList(final List<HistoriqueCommuneInseeModel> list) {

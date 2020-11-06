@@ -48,11 +48,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import fr.aesn.rade.batch.tasks.SpringBatchTestConfiguration;
 import fr.aesn.rade.persist.dao.CommuneSandreJpaDao;
 import fr.aesn.rade.persist.model.CommuneSandre;
-
+import org.junit.Ignore;
 /**
  * Test the Commune Sandre Batch Import Job.
  * @author Marc Gimpel (mgimpel@gmail.com)
  */
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestCommuneSandreImportBatch {
   /** Static Spring Configuration. */
