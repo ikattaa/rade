@@ -63,34 +63,20 @@ public class TestHistoriqueCommuneInseeMapper {
     FieldSet fieldSet = tokenizer.tokenize(TEST_LINE);
     HistoriqueCommuneInseeMapper mapper = new HistoriqueCommuneInseeMapper();
     HistoriqueCommuneInseeModel historique = mapper.mapFieldSet(fieldSet);
-    assertEquals("Entity doesn't match expected value",
-                 "32", historique.getTypeEvenCommune());
-    assertEquals("Entity doesn't match expected value",
-   		sdf.parse("01/01/19"), historique.getDateEffet());
-    assertEquals("Entity doesn't match expected value",
-                 "COM", historique.getTypeCommuneAvantEven());
-    assertEquals("Entity doesn't match expected value",
-                 "01033", historique.getCodeCommuneAvantEven());
-    assertEquals("Entity doesn't match expected value",
-                 "0", historique.getTypeNomClairAv());
-    assertEquals("Entity doesn't match expected value",
-                 "BELLEGARDE SUR VALSERINE", historique.getNomClairMajAv());
-    assertEquals("Entity doesn't match expected value",
-                 "Bellegarde-sur-Valserine", historique.getNomClairTypographieRicheAv());
-    assertEquals("Entity doesn't match expected value",
-    			 "Bellegarde-sur-Valserine", historique.getNomClairTypographieRicheAvecArticleAv());
-    assertEquals("Entity doesn't match expected value",
-                 "COM", historique.getTypeCommuneAprEven());
-    assertEquals("Entity doesn't match expected value",
-                 "01033", historique.getCodeCommuneaprEven());
-    assertEquals("Entity doesn't match expected value",
-                 "0", historique.getTypeNomClairAp());
-    assertEquals("Entity doesn't match expected value",
-                 "VALSERHONE", historique.getNomClairMajAp());
-    assertEquals("Entity doesn't match expected null value",
-               	 "Valserhône",historique.getNomClairTypographieRicheAp());
-    assertEquals("Entity doesn't match expected null value",
-    		     "Valserhône",historique.getNomClairTypographieRicheAvecArticleAp());
+    assertEquals("Entity doesn't match expected value","32", historique.getTypeEvenCommune());
+    assertEquals("Entity doesn't match expected value",sdf.parse("01/01/19"), historique.getDateEffet());
+    assertEquals("Entity doesn't match expected value","COM", historique.getTypeCommuneAvantEven());
+    assertEquals("Entity doesn't match expected value","01033", historique.getCodeCommuneAvantEven());
+    assertEquals("Entity doesn't match expected value","0", historique.getTypeNomClairAv());
+    assertEquals("Entity doesn't match expected value","BELLEGARDE SUR VALSERINE", historique.getNomClairMajAv());
+    assertEquals("Entity doesn't match expected value","Bellegarde-sur-Valserine", historique.getNomClairTypographieRicheAv());
+    assertEquals("Entity doesn't match expected value","Bellegarde-sur-Valserine", historique.getNomClairTypographieRicheAvecArticleAv());
+    assertEquals("Entity doesn't match expected value","COM", historique.getTypeCommuneAprEven());
+    assertEquals("Entity doesn't match expected value","01033", historique.getCodeCommuneaprEven());
+    assertEquals("Entity doesn't match expected value","0", historique.getTypeNomClairAp());
+    assertEquals("Entity doesn't match expected value","VALSERHONE", historique.getNomClairMajAp());
+    assertEquals("Entity doesn't match expected null value","Valserhône",historique.getNomClairTypographieRicheAp());
+    assertEquals("Entity doesn't match expected null value","Valserhône",historique.getNomClairTypographieRicheAvecArticleAp());
   
   }
 
@@ -99,7 +85,6 @@ public class TestHistoriqueCommuneInseeMapper {
    * Test mapping the whole Commune History file to import.
    * @throws Exception problem reading/mapping input file.
    */
- // @Ignore
   @Test
   public void testMappingFile() throws Exception {
     // Configure and open ItemReader (reading test input file)
@@ -113,7 +98,7 @@ public class TestHistoriqueCommuneInseeMapper {
     lineMapper.setLineTokenizer(tokenizer);
     reader.setLineMapper(lineMapper);
     reader.afterPropertiesSet();
-   ExecutionContext ec = new ExecutionContext();
+    ExecutionContext ec = new ExecutionContext();
     reader.open(ec);
     // Configure Validator and validate (@Size, @Min, ...) each line
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

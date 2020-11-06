@@ -309,7 +309,7 @@ public class HistoriqueCommuneInseeImportRules {
 
   public void processMod31x32(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "31", "32"), "32");
+    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "31", "32"), "32","");
     log.debug("Processing MOD 31 & 32, # of sets: {}", setList.size());
     for (HistoriqueCommuneInseeModel.Changeset set : setList) {
       log.trace("Processing set: {}", set);
@@ -336,7 +336,7 @@ public class HistoriqueCommuneInseeImportRules {
 
   public void processMod33x34(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "33", "34"), "34");
+    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "33", "34"), "34","");
     log.debug("Processing MOD 33 & 34, # of sets: {}", setList.size());
     for (HistoriqueCommuneInseeModel.Changeset set : setList) {
       log.trace("Processing set: {}", set);
@@ -453,7 +453,9 @@ public class HistoriqueCommuneInseeImportRules {
   public static final List<HistoriqueCommuneInseeModel.Pair> buildModFilteredPairList(final List<HistoriqueCommuneInseeModel> list, final String mod1, final String mod2) {
     List<HistoriqueCommuneInseeModel> mod1list = buildModFilteredList(list, mod1);
     List<HistoriqueCommuneInseeModel> mod2list = buildModFilteredList(list, mod2);
-    mod1list.addAll(mod2list);
+    if(!mod1.equals(mod2)) {
+    	mod1list.addAll(mod2list);
+    }
     List<HistoriqueCommuneInseeModel.Pair> pairlist = new ArrayList<>(mod1list.size());
     List<HistoriqueCommuneInseeModel> parent;
     log.debug("Filtered Pair List MOD={}-{} size: {}", mod1, mod2, mod1list.size());
@@ -478,22 +480,23 @@ public class HistoriqueCommuneInseeImportRules {
 
 
 
-
+/*
   public static final List<HistoriqueCommuneInseeModel.Changeset> buildMod311x321set(final List<HistoriqueCommuneInseeModel.Pair> list) {
-    return buildModSet(list, "321");
+    return buildModSet(list, "321","");
   }
 
   public static final List<HistoriqueCommuneInseeModel.Changeset> buildMod331x332x333x341set(final List<HistoriqueCommuneInseeModel.Pair> list) {
-    return buildModSet(list, "341");
+    return buildModSet(list, "341","");
   }
+  */
 
-  public static final List<HistoriqueCommuneInseeModel.Changeset> buildModSet(final List<HistoriqueCommuneInseeModel.Pair> list, final String mod) {
+  public static final List<HistoriqueCommuneInseeModel.Changeset> buildModSet(final List<HistoriqueCommuneInseeModel.Pair> list, final String mod1,final String mod2) {
     List<HistoriqueCommuneInseeModel.Changeset> setlist = new ArrayList<>();
     HistoriqueCommuneInseeModel.Changeset set;
     HistoriqueCommuneInseeModel.Pair pair;
     while (!list.isEmpty()) {
       pair = list.get(0);
-      assert pair.getParent().getTypeEvenCommune().equals(mod);
+      assert pair.getParent().getTypeEvenCommune().equals(mod1)||pair.getParent().getTypeEvenCommune().equals(mod2);
       set = extractSet(list, pair);
       setlist.add(set);
       list.removeAll(set.getPairs());

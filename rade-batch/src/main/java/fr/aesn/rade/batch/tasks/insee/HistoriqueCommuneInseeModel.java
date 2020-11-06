@@ -159,23 +159,17 @@ public class HistoriqueCommuneInseeModel implements Serializable {
     }
 
     
-    /** TODO : a voir ou cette fonction est utilisé.
+    /** 
      * Pair is considered valid if the effective date of the change is the same
      * and the Commune d'Echange (COMECH) field of one corresponds to the Code
      * INSEE Commune of the other.
      * @return true if valid, false otherwise.
      */
-    public boolean isValid() {
-    	return true;
-//      return (parent != null && enfant != null
-//        && parent.getCommuneEchange() != null
-//        && enfant.getCommuneEchange() != null
-//        && parent.getDateEffet().equals(enfant.getDateEffet())
-//        && parent.getCommuneEchange().equals(enfant.getCodeDepartement()
-//                                           + enfant.getCodeCommune())
-//        && enfant.getCommuneEchange().equals(parent.getCodeDepartement()
-//                                           + parent.getCodeCommune()));
+   public boolean isValid() {
+     return (parent != null && enfant != null && parent.getDateEffet().equals(enfant.getDateEffet()));
+
     }
+    
 
     /**
      * Returns the effective date of the Pair, or null if the Pair isn't valid.
@@ -217,27 +211,15 @@ public class HistoriqueCommuneInseeModel implements Serializable {
      * @return true if valid, false otherwise.
      */
     public boolean isValid() {
-      if (pairs.isEmpty()) {
+      if (this.pairs.isEmpty()) {
         return false;
       }
-      Date eff = pairs.get(0).getDateEffet();
-      /* TODO vérifier si il faut remplacer nbcom :
-       * Integer nbcom = pairs.get(0).getParent().getNombreCommunes();
-      if (eff == null || nbcom == null) { */
+      Date eff = pairs.get(0).parent.getDateEffet();
       if (eff == null){
         return false;
       }
-      /* TODO vérifier si il faut remplacer nbcom :
-       * if (pairs.size() != nbcom
-              && */
-      if (!"Roche-sur-Yon".equals(pairs.get(0).getParent().getNomClairTypographieRicheAp())) {
-        // Le 25/08/1964 Saint-André-d'Ornay (85195) et Bourg-sous-la-Roche-sur-Yon (85032)
-        // ont fusionné avec Roche-sur-Yon (85191) mais tous les deux sont de rang=1 & nb=1
-        return false;
-      }
       for (Pair pair : pairs) {
-        if (!pair.isValid()
-          || !eff.equals(pair.getDateEffet())) {
+        if (!pair.isValid()||!eff.equals(pair.getParent().getDateEffet())) {
           return false;
         }
       }
