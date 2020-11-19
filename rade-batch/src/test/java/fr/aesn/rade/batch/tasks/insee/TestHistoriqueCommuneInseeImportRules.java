@@ -49,7 +49,6 @@ public class TestHistoriqueCommuneInseeImportRules {
   @BeforeClass
   public static void setUpClass() throws Exception {
     FlatFileItemReader<HistoriqueCommuneInseeModel> reader = new FlatFileItemReader<>();
-   // reader.setResource(new ClassPathResource("batchfiles/insee/historiq2018.txt"));
     reader.setResource(new ClassPathResource("batchfiles/insee/historiq2020.csv"));
     reader.setLinesToSkip(1);
     DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
@@ -111,7 +110,6 @@ public class TestHistoriqueCommuneInseeImportRules {
     List<HistoriqueCommuneInseeModel> testList = historyList;
     List<HistoriqueCommuneInseeModel.Pair> pairList;
     pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "21", "21");
-    //TODO : vérifier le nombre
     assertEquals(570, pairList.size());
     for (HistoriqueCommuneInseeModel.Pair pair : pairList) {
       assertTrue(pair.isValid());
@@ -139,7 +137,6 @@ public class TestHistoriqueCommuneInseeImportRules {
     }
     testList = filterList(historyList, "2018-01-01", "2019-01-01");
     pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "31", "32");
-    //TODO : vérifier le nombre remonté
     assertEquals(95, pairList.size());
     for (HistoriqueCommuneInseeModel.Pair pair : pairList) {
       assertTrue(pair.isValid());
@@ -180,7 +177,7 @@ public class TestHistoriqueCommuneInseeImportRules {
     pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "31", "32");
     int pairListSize = pairList.size();
     pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "32","31");
-    assertEquals(3870, pairSet.size());
+    assertEquals(1429, pairSet.size());
     int count = 0;
     for (HistoriqueCommuneInseeModel.Changeset set : pairSet) {
       count += set.getPairs().size();
@@ -191,7 +188,7 @@ public class TestHistoriqueCommuneInseeImportRules {
     pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "31", "32");
     pairListSize = pairList.size();
     pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "32","31");
-    assertEquals(95, pairSet.size());
+    assertEquals(37, pairSet.size());
     count = 0;
     for (HistoriqueCommuneInseeModel.Changeset set : pairSet) {
       count += set.getPairs().size();
@@ -213,7 +210,7 @@ public class TestHistoriqueCommuneInseeImportRules {
     pairList = HistoriqueCommuneInseeImportRules.buildModFilteredPairList(testList, "33", "34");
     int pairListSize = pairList.size();
     pairSet = HistoriqueCommuneInseeImportRules.buildModSet(pairList, "34","33");
-    assertEquals(1869, pairSet.size());
+    assertEquals(822, pairSet.size());
     int count = 0;
     for (HistoriqueCommuneInseeModel.Changeset set : pairSet) {
       count += set.getPairs().size();

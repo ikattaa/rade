@@ -347,8 +347,11 @@ public class CommuneServiceImpl
     }
     Commune commune = communeJpaDao.findByCodeInseeValidOnDate(com21retabli.getCodeInsee(), dateEffective);
     if ((commune != null)) {
-      throw new InvalidArgumentException(
-              "Commune rétabli already exists for the given date.");
+    	if(!com21retabli.getCodeInsee().equals(com21source.getCodeInsee())||(!com21source.getNomEnrichi().equals(commune.getNomEnrichi()))) {
+    	      throw new InvalidArgumentException(
+    	              "Commune rétabli already exists for the given date.");
+    	}
+    
     }
     if (com21source == null || com21source.getCodeInsee() == null
             || com21source.getDepartement() == null
@@ -361,7 +364,7 @@ public class CommuneServiceImpl
              dateEffective, com21retabli.getCodeInsee(), com21source.getCodeInsee());
     // update source commune (21).
     Commune parentSource = invalidateCommune(com21source.getCodeInsee(), dateEffective);
-    com21source.setId(null);
+  /*  com21source.setId(null);
     com21source.setDebutValidite(dateEffective);
     if (com21source.getNomMajuscule() == null) {
       com21source.setNomMajuscule(StringConversionUtils.toUpperAsciiWithLookup(com21source.getNomEnrichi()));
@@ -375,6 +378,7 @@ public class CommuneServiceImpl
     com21source.setAudit(audit);
     Commune enfantSource = communeJpaDao.save(com21source);
     buildGenealogie(parentSource, enfantSource, "21", commentaire);
+    */
     // create new commune retabli
     com21retabli.setAudit(audit);
     if (com21retabli.getNomMajuscule() == null) {
@@ -463,6 +467,7 @@ public class CommuneServiceImpl
                                       final String oldCodeInsee,
                                       final String commentaire)
     throws InvalidArgumentException {
+	  System.out.println("41 : "+codeInsee+ "/"+oldCodeInsee);
     // validate arguments
     if (dateEffective == null || audit == null) {
       throw new InvalidArgumentException("The date and audit are mandatory.");
@@ -652,9 +657,8 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "Commune absorbant is not valid from the give date.");
     }
-    log.info("Mod={} ({}) requested: commune={}, date={}",
-             mod,
-             metadataService.getTypeGenealogieEntiteAdmin(mod).getLibelleCourt(),
+ 
+   log.info("Mod={} ({}) requested: commune={}, date={}", mod, metadataService.getTypeGenealogieEntiteAdmin(mod).getLibelleCourt(),
              comAbsorbant.getCodeInsee(), dateEffective);
     // create new Commune absorbant close de la commune
     Commune parentAbsorbant = invalidateCommune(comAbsorbant.getCodeInsee(), dateEffective);
@@ -823,23 +827,39 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "The codeInsee and date are mandatory.");
     }
-    Commune commune = communeJpaDao.findByCodeInseeValidOnDate(codeInsee, dateEffective);
-    if ((commune == null)) {
+    List listcommun=communeJpaDao.findAllByCodeInseeInvalidOnDate(codeInsee, dateEffective);
+    
+    Commune communeinvalide= communeJpaDao.findByCodeInseeInvalidOnDate(codeInsee, dateEffective);
+
+    
+    List listcommun2=communeJpaDao.findAllByCodeInseeValidBeforeDate(codeInsee, dateEffective);
+    
+    Commune commune = communeJpaDao.findByCodeInseeValidBeforeDate(codeInsee, dateEffective);
+    if(commune==null) 
+    {commune = communeJpaDao.findByCodeInseeValidOnDate(codeInsee, dateEffective);
+    		}
+    if (commune == null && communeinvalide==null) {
       throw new InvalidArgumentException(
               "There is no Commune with the given codeInsee (" + codeInsee
               + ") valid at the dateEffective ("+ dateEffective + ")");
     }
-    if (commune.getFinValidite() != null) {
+    if(commune!=null) {
+    if (commune.getFinValidite() != null && communeinvalide==null) {
       throw new InvalidArgumentException(
               "The Commune has already been invalidated");
     }
     if (commune.getDebutValidite() != null
-            && commune.getDebutValidite().after(dateEffective)) {
+            && commune.getDebutValidite().after(dateEffective) && communeinvalide==null) {
       throw new InvalidArgumentException(
               "The Commune is invalidated before first valid: "
               + commune.getDebutValidite());
     }
+   
     commune.setFinValidite(dateEffective);
+    }
+    if(communeinvalide!=null) {
+    	return communeinvalide;
+    }
     
     return communeJpaDao.save(commune);
   }

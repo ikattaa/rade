@@ -93,6 +93,7 @@ public class HistoriqueCommuneInseeMapper
     historique.setNomClairMajAp(fieldSet.readString(11));
     historique.setNomClairTypographieRicheAp(fieldSet.readString(12));
     historique.setNomClairTypographieRicheAvecArticleAp(fieldSet.readString(13));
+   
     return historique;
   }
 

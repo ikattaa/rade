@@ -19,6 +19,7 @@ package fr.aesn.rade.batch.tasks.insee;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -62,11 +63,12 @@ import fr.aesn.rade.batch.tasks.SpringBatchTestConfiguration;
 import fr.aesn.rade.persist.dao.CommuneJpaDao;
 import fr.aesn.rade.persist.model.Commune;
 import fr.aesn.rade.service.MetadataService;
-
+import org.junit.Ignore;
 /**
  * Test the Commune Batch Import Job.
  * @author Marc Gimpel (mgimpel@gmail.com)
  */
+//@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestHistoriqueCommuneImportBatch {
   /** Static Spring Configuration. */
@@ -108,6 +110,7 @@ public class TestHistoriqueCommuneImportBatch {
         .addScript("db/sql/insert-Departement.sql")
         .build();
 //    DatabaseManagerSwing.main(new String[] { "--url", "jdbc:derby:memory:testdb", "--user", "sa", "--password", "" });
+
   }
 
   /**
@@ -135,7 +138,7 @@ public class TestHistoriqueCommuneImportBatch {
    * @throws Exception
    */
   public void setUpCommunes(String year) throws Exception {
-    jobLauncherTestUtils.setJob(context.getBean("importCommuneSimpleInseeJob", Job.class));
+    //jobLauncherTestUtils.setJob(context.getBean("importCommuneSimpleInseeJob", Job.class));
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     JobParametersBuilder jobBuilder = new JobParametersBuilder();
     jobBuilder.addString("inputFile", "classpath:batchfiles/insee/comsimp" + year + ".txt");
@@ -143,9 +146,15 @@ public class TestHistoriqueCommuneImportBatch {
     jobBuilder.addString("auditAuteur", "Batch");
     jobBuilder.addDate("auditDate", new Date());
     jobBuilder.addString("auditNote", "Import Test Setup");
+    System.out.println(" test commune 1:");
     JobParameters jobParameters = jobBuilder.toJobParameters();
-    jobLauncherTestUtils.launchJob(jobParameters);
+
+    jobLauncherTestUtils.setJob(context.getBean("importCommuneSimpleInseeJob", Job.class));
+    JobExecution jobExecution =jobLauncherTestUtils.launchJob(jobParameters);
+    System.out.println(" test commune  2:");
+    assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());
     jobLauncherTestUtils.setJob(context.getBean("importCommuneInseeHistoryJob", Job.class));
+  
   }
 
   /**
@@ -171,7 +180,7 @@ public class TestHistoriqueCommuneImportBatch {
     assertEquals("After initialisation all records should be valid.",
                  initialSizeAll, initialSizeValid);
     JobParametersBuilder jobBuilder = new JobParametersBuilder();
-    jobBuilder.addString("inputFile", "classpath:batchfiles/insee/historiq2018-modified.txt");
+    jobBuilder.addString("inputFile", "classpath:batchfiles/insee/historiq2020.csv");
     jobBuilder.addDate("debutValidite", sdf.parse("1999-01-02"));
     jobBuilder.addString("auditAuteur", "Batch");
     jobBuilder.addDate("auditDate", new Date());
@@ -179,6 +188,7 @@ public class TestHistoriqueCommuneImportBatch {
     JobParameters jobParameters = jobBuilder.toJobParameters();
     JobExecution jobExecution = jobLauncherTestUtils.launchJob(jobParameters);
     assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());
+    
     testYear("2000");
     testYear("2001");
     testYear("2002");
@@ -196,8 +206,11 @@ public class TestHistoriqueCommuneImportBatch {
     testYear("2014");
     testYear("2015");
     testYear("2016");
+    
     testYear("2017");
     testYear("2018");
+    testYear("2019");
+    
   }
 
   private void testYear(String year) throws Exception {

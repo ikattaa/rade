@@ -252,6 +252,7 @@ public class HistoriqueCommuneInseeImportRules {
     processMod21(dateFilteredList);
     processMod31x32(dateFilteredList);
     processMod33x34(dateFilteredList);
+    
    
   }
 
@@ -309,21 +310,22 @@ public class HistoriqueCommuneInseeImportRules {
 
   public void processMod31x32(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "31", "32"), "32","");
+	 
+    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "31", "32"), "31","32");
     log.debug("Processing MOD 31 & 32, # of sets: {}", setList.size());
     for (HistoriqueCommuneInseeModel.Changeset set : setList) {
       log.trace("Processing set: {}", set);
       assert set.isValid();
       for(HistoriqueCommuneInseeModel.Pair pair : set.getPairs()) {
-        assert "31".equals(pair.getEnfant().getTypeEvenCommune()) : pair.getEnfant().getTypeEvenCommune();
-        assert "32".equals(pair.getParent().getTypeEvenCommune()) : pair.getParent().getTypeEvenCommune();
+        assert "32".equals(pair.getParent().getTypeEvenCommune())||"31".equals(pair.getEnfant().getTypeEvenCommune()) : pair.getEnfant().getTypeEvenCommune(); 
       }
-      List<Commune> com31absorbe = buildCommuneList(buildEnfantList(set));
-      Commune com32absorbant = buildCommune(set.getPairs().get(0).getParent());
+      List<Commune> com31absorbe = buildCommuneList(buildParentList(set));
+      
+      Commune com32absorbant = buildCommuneEnfant(set.getPairs().get(0).getEnfant());
       Commune test;
       for (HistoriqueCommuneInseeModel.Pair pair : set.getPairs()) {
         // Verify all parents have the same details
-        test = buildCommune(pair.getParent());
+        test = buildCommuneEnfant(pair.getParent());
         assert com32absorbant.equals(test);
       }
       communeService.mod31x32Fusion(set.getDateEffet(),
@@ -336,21 +338,20 @@ public class HistoriqueCommuneInseeImportRules {
 
   public void processMod33x34(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "33", "34"), "34","");
+    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "33", "34"), "33","34");
     log.debug("Processing MOD 33 & 34, # of sets: {}", setList.size());
     for (HistoriqueCommuneInseeModel.Changeset set : setList) {
       log.trace("Processing set: {}", set);
       assert set.isValid();
       for(HistoriqueCommuneInseeModel.Pair pair : set.getPairs()) {
-        assert "33".equals(pair.getEnfant().getTypeEvenCommune()) : pair.getEnfant().getTypeEvenCommune();
-        assert "34".equals(pair.getParent().getTypeEvenCommune()) : pair.getParent().getTypeEvenCommune();
+        assert "34".equals(pair.getParent().getTypeEvenCommune())||"33".equals(pair.getEnfant().getTypeEvenCommune()) : pair.getEnfant().getTypeEvenCommune();
       }
       List<Commune> com33associe = buildCommuneList(buildEnfantList(set));
-      Commune com34absorbant = buildCommune(set.getPairs().get(0).getParent());
+      Commune com34absorbant = buildCommuneEnfant(set.getPairs().get(0).getParent());
       Commune test;
       for (HistoriqueCommuneInseeModel.Pair pair : set.getPairs()) {
         // Verify all parents have the same details
-        test = buildCommune(pair.getParent());
+        test = buildCommuneEnfant(pair.getParent());
         assert com34absorbant.equals(test);
       }
       communeService.mod33x34FusionAssociation(set.getDateEffet(),
@@ -374,21 +375,24 @@ public class HistoriqueCommuneInseeImportRules {
                                           batchAudit,
                                           historique.getCodeCommuneaprEven(),
                                           historique.getCodeCommuneaprEven().substring(0,2),
-                                          historique.getTypeCommuneAvantEven(),
+                                          historique.getCodeCommuneAvantEven(),
                                           null);
     }
   }
 
   private Commune buildCommune(final HistoriqueCommuneInseeModel historique) {
     Commune commune = new Commune();
+		
+		    
 		    commune.setTypeEntiteAdmin(metadataService.getTypeEntiteAdmin("COM"));
 		    commune.setDebutValidite(historique.getDateEffet());
-		    commune.setCodeInsee(historique.getCodeCommuneaprEven());
-		    commune.setDepartement(historique.getCodeCommuneaprEven().substring(0, 2));
-		    commune.setTypeNomClair(metadataService.getTypeNomClair(historique.getTypeNomClairAp()));
-		    commune.setNomEnrichi(historique.getNomClairTypographieRicheAp());
-		    commune.setNomMajuscule(historique.getNomClairMajAp());
-        
+		    commune.setCodeInsee(historique.getCodeCommuneAvantEven());
+		    commune.setDepartement(historique.getCodeCommuneAvantEven().substring(0, 2));
+		    commune.setTypeNomClair(metadataService.getTypeNomClair(historique.getTypeNomClairAv()));		    
+		    commune.setNomEnrichi(historique.getNomClairTypographieRicheAv());
+		    commune.setNomMajuscule(historique.getNomClairMajAv());
+		    commune.setArticleEnrichi(this.getArticleByTncc(historique.getTypeNomClairAv()));
+		    
     return commune;
   }
   /**
@@ -398,14 +402,14 @@ public class HistoriqueCommuneInseeImportRules {
    */
   private Commune buildCommuneEnfant(final HistoriqueCommuneInseeModel historique) {
 	    Commune commune = new Commune();
-			    commune.setTypeEntiteAdmin(metadataService.getTypeEntiteAdmin("COM"));
-			    commune.setDebutValidite(historique.getDateEffet());
-			    commune.setCodeInsee(historique.getCodeCommuneAvantEven());
-			    commune.setDepartement(historique.getCodeCommuneAvantEven().substring(0, 2));
-			    commune.setTypeNomClair(metadataService.getTypeNomClair(historique.getTypeNomClairAv()));
-			    commune.setNomEnrichi(historique.getNomClairTypographieRicheAv());
-			    commune.setNomMajuscule(historique.getNomClairMajAv());
-	    	    
+	    commune.setTypeEntiteAdmin(metadataService.getTypeEntiteAdmin("COM"));
+	    commune.setDebutValidite(historique.getDateEffet());
+	    commune.setCodeInsee(historique.getCodeCommuneaprEven());
+	    commune.setDepartement(historique.getCodeCommuneaprEven().substring(0, 2));
+	    commune.setTypeNomClair(metadataService.getTypeNomClair(historique.getTypeNomClairAp()));
+	    commune.setNomEnrichi(historique.getNomClairTypographieRicheAp());
+	    commune.setNomMajuscule(historique.getNomClairMajAp());
+	    commune.setArticleEnrichi(this.getArticleByTncc(historique.getTypeNomClairAp()));
 	    return commune;
 	  }
 
@@ -438,6 +442,19 @@ public class HistoriqueCommuneInseeImportRules {
     List<HistoriqueCommuneInseeModel> list = new ArrayList<>(pairs.size());
     for (HistoriqueCommuneInseeModel.Pair pair : pairs) {
       list.add(pair.getEnfant());
+    }
+  return list;
+  }
+  /**
+   * Build a list of all the children in the changeset.
+   * @param set the changeset.
+   * @return a list of all the parent in the changeset.
+   */
+  private List<HistoriqueCommuneInseeModel> buildParentList(final HistoriqueCommuneInseeModel.Changeset set) {
+    List<HistoriqueCommuneInseeModel.Pair> pairs = set.getPairs();
+    List<HistoriqueCommuneInseeModel> list = new ArrayList<>(pairs.size());
+    for (HistoriqueCommuneInseeModel.Pair pair : pairs) {
+      list.add(pair.getParent());
     }
   return list;
   }
@@ -477,29 +494,17 @@ public class HistoriqueCommuneInseeImportRules {
     return pairlist;
   }
 
-
-
-
-/*
-  public static final List<HistoriqueCommuneInseeModel.Changeset> buildMod311x321set(final List<HistoriqueCommuneInseeModel.Pair> list) {
-    return buildModSet(list, "321","");
-  }
-
-  public static final List<HistoriqueCommuneInseeModel.Changeset> buildMod331x332x333x341set(final List<HistoriqueCommuneInseeModel.Pair> list) {
-    return buildModSet(list, "341","");
-  }
-  */
-
   public static final List<HistoriqueCommuneInseeModel.Changeset> buildModSet(final List<HistoriqueCommuneInseeModel.Pair> list, final String mod1,final String mod2) {
     List<HistoriqueCommuneInseeModel.Changeset> setlist = new ArrayList<>();
     HistoriqueCommuneInseeModel.Changeset set;
     HistoriqueCommuneInseeModel.Pair pair;
     while (!list.isEmpty()) {
       pair = list.get(0);
-      assert pair.getParent().getTypeEvenCommune().equals(mod1)||pair.getParent().getTypeEvenCommune().equals(mod2);
+      assert ( mod2!= null && !mod2.isEmpty() && mod2.equals(pair.getParent().getTypeEvenCommune()))|| ( mod1!= null && !mod1.isEmpty() && mod1.equals(pair.getEnfant().getTypeEvenCommune())) : pair.getEnfant().getTypeEvenCommune();
       set = extractSet(list, pair);
       setlist.add(set);
       list.removeAll(set.getPairs());
+
     }
     return setlist;
   }
@@ -508,16 +513,18 @@ public class HistoriqueCommuneInseeImportRules {
                                                                         final HistoriqueCommuneInseeModel.Pair pair) {
     
 	Date eff = pair.getDateEffet();
-    String leg = pair.getEnfant().getNomClairTypographieRicheAvecArticleAv();
-    String comech = pair.getEnfant().getCodeCommuneAvantEven();
+    String leg = pair.getEnfant().getNomClairTypographieRicheAvecArticleAp();
+    String comech = pair.getEnfant().getCodeCommuneaprEven();
     List<HistoriqueCommuneInseeModel.Pair> set;
+
     set = list.stream()
               .filter(p -> p.getDateEffet().equals(eff)
-                        && p.getEnfant().getNomClairTypographieRicheAvecArticleAv().equals(leg)
-                        && p.getEnfant().getCodeCommuneAvantEven().equals(comech))
+                        && p.getEnfant().getNomClairTypographieRicheAvecArticleAp().equals(leg)
+                        && p.getEnfant().getCodeCommuneaprEven().equals(comech))
               .collect(Collectors.toList());
     HistoriqueCommuneInseeModel.Changeset changeset = new HistoriqueCommuneInseeModel.Changeset();
     changeset.addAll(set);
+   
     return changeset;
   }
 
@@ -539,8 +546,8 @@ public class HistoriqueCommuneInseeImportRules {
   
   public static final List<HistoriqueCommuneInseeModel> filterListByTypeCOM(final List<HistoriqueCommuneInseeModel> list) {
 	  return list.stream()
-			  .filter(history -> history.getTypeCommuneAprEven().equals("COM") 
-					  && history.getTypeCommuneAvantEven().equals("COM"))
+			  .filter(history -> history.getTypeCommuneAprEven().equals("COM"))
+			  .filter(history -> history.getTypeCommuneAvantEven().equals("COM"))
 			  .collect(Collectors.toList());
   }
 
@@ -565,5 +572,20 @@ public class HistoriqueCommuneInseeImportRules {
     private List<HistoriqueCommuneInseeModel> mod1leftoverlist;
     /** List of unpaired elements from second MOD. */ 
     private List<HistoriqueCommuneInseeModel> mod2leftoverlist;
+  }
+  private String getArticleByTncc(String value) {
+	  String article;
+      switch (value) {
+      case "2":  article="null";
+      case "3":  article="La";
+      case "4":  article="Les";
+      case "5":  article="L'";
+      case "6":  article="Aux";
+      case "7":  article="Las";
+      case "8":  article="Los";
+      default:article=null;
+    	  break;
+  }
+	  return article;
   }
 }
