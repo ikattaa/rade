@@ -61,19 +61,6 @@ public interface CommuneJpaDao
                + " AND (c.finValidite = ?2)")
   public Commune findByCodeInseeInvalidOnDate(String codeInsee,
                                             Date date);
-  
-  
-  /**
-   * Returns the Commune with the given CodeInsee valid at the given date.
-   * @param codeInsee the Code INSEE of the Commune.
-   * @param date the date at which the Commune was valid
-   * @return the valid Commune.
-   */
-  @Query("SELECT c FROM Commune c"
-          + " WHERE c.codeInsee = ?1"
-          + " AND (c.finValidite = ?2)")
-  public List<Commune> findAllByCodeInseeInvalidOnDate(String codeInsee,
-          Date date);
 
   /**
    * Returns the Commune with the given CodeInsee valid at the given date.
@@ -100,34 +87,7 @@ public interface CommuneJpaDao
                + " AND (c.finValidite IS NULL OR c.finValidite > ?2)")
   public Commune findByCodeInseeValidBeforeDate(String codeInsee,
                                             Date date);
-  
-  /**
-   * Returns the Commune with the given CodeInsee valid at the given date.
-   * @param codeInsee the Code INSEE of the Commune.
-   * @param date the date at which the Commune was valid
-   * @return the valid Commune.
-   */
-  @Query("SELECT c FROM Commune c"
-               + " WHERE c.codeInsee = ?1"
-               + " AND (c.debutValidite IS NULL OR c.debutValidite < ?2)"
-               + " AND (c.finValidite IS NULL OR c.finValidite > ?2)")
-  public List<Commune> findAllByCodeInseeValidBeforeDate(String codeInsee,
-                                            Date date);
-  
-  /**
-   * Returns the Commune with the given CodeInsee valid at the given date.
-   * @param codeInsee the Code INSEE of the Commune.
-   * @param date the date at which the Commune was valid
-   * @return the valid Commune.
-   */
-  @Query("SELECT c FROM Commune c"
-               + " WHERE c.codeInsee = ?1"
-               + " AND (c.debutValidite IS NULL OR c.debutValidite <= ?2)"
-               + " AND (c.finValidite IS NULL OR c.finValidite > ?2)")
-  public List<Commune> findAllByCodeInseeValidOnDate(String codeInsee,
-          Date date);
    
-
   /**
    * Returns a List of from the given departement valid at the given date.
    * @param dept the departement of the Communes.

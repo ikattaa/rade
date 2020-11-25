@@ -364,21 +364,7 @@ public class CommuneServiceImpl
              dateEffective, com21retabli.getCodeInsee(), com21source.getCodeInsee());
     // update source commune (21).
     Commune parentSource = invalidateCommune(com21source.getCodeInsee(), dateEffective);
-  /*  com21source.setId(null);
-    com21source.setDebutValidite(dateEffective);
-    if (com21source.getNomMajuscule() == null) {
-      com21source.setNomMajuscule(StringConversionUtils.toUpperAsciiWithLookup(com21source.getNomEnrichi()));
-    }
-    if (com21source.getArticleEnrichi() == null) {
-      com21source.setArticleEnrichi(com21source.getTypeNomClair().getArticle());
-    }
-    if (com21source.getCommentaire() == null) {
-        com21source.setCommentaire("");
-    }
-    com21source.setAudit(audit);
-    Commune enfantSource = communeJpaDao.save(com21source);
-    buildGenealogie(parentSource, enfantSource, "21", commentaire);
-    */
+
     // create new commune retabli
     com21retabli.setAudit(audit);
     if (com21retabli.getNomMajuscule() == null) {
@@ -447,27 +433,28 @@ public class CommuneServiceImpl
 
 
   /**
-   * Changes the departement (MOD=41 : Changement de departement) that the
-   * Commune belongs to (NB: this involves changing it's codeInsee).
+   * Changes the departement/code (MOD=41 : Changement de departement,
+   * MOD=50 : Changement de code) 
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
    * @param codeInsee the new code of the Commune.
    * @param departement the new departement to which the Commune belongs.
    * @param oldCodeInsee the old code for the Commune.
    * @param commentaire comment for the genealogie link.
+   * @param mod modification code.
    * @return the new Commune.
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod41ChangementDept(final Date dateEffective,
+  public Commune mod41x50ChangementCodeCom(final Date dateEffective,
                                       final Audit audit,
                                       final String codeInsee,
                                       final String departement,
                                       final String oldCodeInsee,
-                                      final String commentaire)
+                                      final String commentaire,
+                                      final String mod)
     throws InvalidArgumentException {
-	  System.out.println("41 : "+codeInsee+ "/"+oldCodeInsee);
     // validate arguments
     if (dateEffective == null || audit == null) {
       throw new InvalidArgumentException("The date and audit are mandatory.");
@@ -481,7 +468,7 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "There is already a Commune with the given codeInsee valid at the dateEffective");
     }
-    log.info("Mod=41 (Changement de Departement) requested: date={}, new code commune={}, old code commune={}",
+    log.info("Mod=41 (Changement de Departement)/Mod=50 (Changement de code) requested: date={}, new code commune={}, old code commune={}",
              dateEffective, codeInsee, oldCodeInsee);
     // invalidate old commune
     Commune parent = invalidateCommune(oldCodeInsee, dateEffective);
@@ -496,7 +483,7 @@ public class CommuneServiceImpl
     newCommune.setAudit(audit);
     Commune enfant = communeJpaDao.save(newCommune);
     // add genealogie
-    buildGenealogie(parent, enfant, "41", commentaire);
+    buildGenealogie(parent, enfant, mod, commentaire);
     return getCommuneById(enfant.getId());
   }
 
@@ -827,13 +814,8 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "The codeInsee and date are mandatory.");
     }
-    List listcommun=communeJpaDao.findAllByCodeInseeInvalidOnDate(codeInsee, dateEffective);
     
     Commune communeinvalide= communeJpaDao.findByCodeInseeInvalidOnDate(codeInsee, dateEffective);
-
-    
-    List listcommun2=communeJpaDao.findAllByCodeInseeValidBeforeDate(codeInsee, dateEffective);
-    
     Commune commune = communeJpaDao.findByCodeInseeValidBeforeDate(codeInsee, dateEffective);
     if(commune==null) 
     {commune = communeJpaDao.findByCodeInseeValidOnDate(codeInsee, dateEffective);
@@ -843,24 +825,26 @@ public class CommuneServiceImpl
               "There is no Commune with the given codeInsee (" + codeInsee
               + ") valid at the dateEffective ("+ dateEffective + ")");
     }
-    if(commune!=null) {
-    if (commune.getFinValidite() != null && communeinvalide==null) {
-      throw new InvalidArgumentException(
-              "The Commune has already been invalidated");
-    }
-    if (commune.getDebutValidite() != null
-            && commune.getDebutValidite().after(dateEffective) && communeinvalide==null) {
-      throw new InvalidArgumentException(
-              "The Commune is invalidated before first valid: "
-              + commune.getDebutValidite());
-    }
-   
-    commune.setFinValidite(dateEffective);
-    }
+    
     if(communeinvalide!=null) {
     	return communeinvalide;
     }
     
+    if(commune!=null) {
+    	if (commune.getFinValidite() != null && communeinvalide==null) {
+    		throw new InvalidArgumentException(
+    				"The Commune has already been invalidated");
+    	}
+    	if (commune.getDebutValidite() != null
+    			&& commune.getDebutValidite().after(dateEffective) && communeinvalide==null) {
+    		throw new InvalidArgumentException(
+    				"The Commune is invalidated before first valid: "
+    						+ commune.getDebutValidite());
+    	}
+
+    	commune.setFinValidite(dateEffective);
+    }
+
     return communeJpaDao.save(commune);
   }
 }
