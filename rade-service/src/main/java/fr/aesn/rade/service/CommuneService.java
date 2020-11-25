@@ -192,20 +192,21 @@ public interface CommuneService {
     throws InvalidArgumentException;
 
   /**
-   * Changes the departement (MOD=41 : Changement de departement) that the
-   * Commune belongs to (NB: this involves changing it's codeInsee).
+   * Changes the departement/code (MOD=41 : Changement de departement,
+   * MOD=50 : Changement de code) 
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
    * @param codeInsee the new code of the Commune.
    * @param departement the new departement to which the Commune belongs.
    * @param oldCodeInsee the old code for the Commune.
    * @param commentaire comment for the genealogie link.
+   * @param mod modification code.
    * @return the new Commune.
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
-  public Commune mod41ChangementDept(Date dateEffective, Audit audit,
+  public Commune mod41x50ChangementCodeCom(Date dateEffective, Audit audit,
                                       String codeInsee, String departement,
-                                      String oldCodeInsee, String commentaire)
+                                      String oldCodeInsee, String commentaire, String mod)
     throws InvalidArgumentException;
 
 
