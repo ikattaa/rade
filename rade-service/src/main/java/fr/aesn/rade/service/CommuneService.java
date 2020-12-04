@@ -87,6 +87,14 @@ public interface CommuneService {
    * @return the Commune with the given code at the given date.
    */
   public Commune getCommuneByCode(String code, Date date);
+  /**
+   * Get the Commune with the given code at the given date.
+   * @param code the Commune code.
+   * @param date the date at which the code was valid
+   * @return the Commune with the given code at the given date.
+   */
+  public Commune getCommuneActiveByCode(String code, Date date);
+  public List<Commune> getAllCommuneEnfantActiveByCodeInactiveParent(String code, Date date);
 
   /**
    * Get the Commune with the given code at the given date.

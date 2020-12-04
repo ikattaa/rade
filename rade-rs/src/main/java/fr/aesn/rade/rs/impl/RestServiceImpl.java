@@ -264,8 +264,10 @@ public class RestServiceImpl
    * @param rawDate the date at which the returned data is valid.
    * @return list of all Commune matching the request parameters.
    */
+  
   @GET
-  @Path(REST_PATH_COMMUNE)
+  //@Path(REST_PATH_COMMUNE)
+  @Path(REST_PATH_COMMUNE + "{code}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAllCommune(@Context final HttpServletRequest req,
                                 @QueryParam("code") final List<String> rawCodes,
@@ -313,6 +315,7 @@ public class RestServiceImpl
                      .build();
     }
   }
+  
 
   /**
    * Get the Commune with the given INSEE code.
@@ -483,6 +486,20 @@ public class RestServiceImpl
       }
     }
   }
+  
+private static final boolean decodeBoolean(final String rawgenealogie)
+		    throws RestRequestException {		   
+		      try {
+		        Boolean genealogie= Boolean.parseBoolean(rawgenealogie);
+		        if(genealogie) {
+		        	return true;
+		        }
+		        return false;		        
+		      } catch (Exception e) {
+		        throw new RestRequestException("Could not parse genealogie " + rawgenealogie, e);
+		      }
+		    
+		  }
 
   /**
    * Extracts the REST Services base path from the given HTTP Request and the
@@ -501,4 +518,122 @@ public class RestServiceImpl
     }
     return url.substring(0, index);
   }
+ @GET
+ @Path(REST_PATH_COMMUNE)
+ @Produces(MediaType.APPLICATION_JSON)
+public Response getAllCommunes(@Context final HttpServletRequest req,
+        @QueryParam("code") final List<String> rawCodes,
+        @QueryParam("dept") final String rawDept,
+        @QueryParam("namelike") final String rawNameLike,
+        @QueryParam("date") final String rawDate,
+        @QueryParam("genealogie") final String rawgenealogie ) {
+	// TODO Auto-generated method stub
+	    log.info("Executing operation getAllCommunes with code {}, dept {}, name like {} , date {} and genealogie {}",
+	             rawCodes, rawDept, rawNameLike, rawDate,rawgenealogie);
+	 List<Commune> communes = null;
+	    try {
+	        Date date = decodeDate(rawDate);
+	        boolean genealogie = decodeBoolean(rawgenealogie);
+	        // if Query Parameter "code" is present, ignore "dept" and "namelike"
+	        if (rawCodes != null && !rawCodes.isEmpty()) {
+	          String code = null;
+	          Commune commune = null;
+	          
+	          communes = new ArrayList<>(rawCodes.size());
+	          for (String rawCode : rawCodes) {
+	            code = decodeString(rawCode);
+	            List<Commune> communesEnfants=null;
+	            if(genealogie) {
+	            	communesEnfants= communeService.getAllCommuneEnfantActiveByCodeInactiveParent(code,date);
+	            }else {
+		            commune = communeService.getCommuneActiveByCode(code, date);
+	            }
+	            if (communesEnfants != null) {
+	              communes.addAll(communesEnfants);
+	            }
+	            if (commune != null ) {
+	              communes.add(commune);
+	            }
+	          }
+	          log.debug("found {} communes for the given codes", communes.size());
+	        }
+	        // if Query Parameter "code" is NOT present, use "dept" and "namelike"
+	        else {
+	          String dept = decodeString(rawDept);
+	          String nameLike = decodeString(rawNameLike);
+	          communes = communeService.getAllCommune(dept, nameLike, date);
+	          log.debug("found {} communes for the given criteria", communes.size());
+	        }
+	        // send response
+	        if (communes == null || communes.isEmpty()) {
+	          return Response.status(Response.Status.NOT_FOUND)
+	                         .build();
+	        } else {
+	        	
+	          return Response.ok(CommuneListDto.fromEntityList(communes))
+	                         .build();
+	        }
+	        
+	    }catch (RestRequestException e) {
+     log.error(e.getMessage(), e);
+     return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
+   }
+ }
+
+
+/**
+   @GET
+  @Path(REST_PATH_COMMUNE)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getAllCommune(@Context final HttpServletRequest req,
+                                @QueryParam("code") final List<String> rawCodes,
+                                @QueryParam("dept") final String rawDept,
+                                @QueryParam("namelike") final String rawNameLike,
+                                @QueryParam("date") final String rawDate) {
+    log.info("Executing operation getAllCommune with code {}, dept {}, name like {} and date {}",
+             rawCodes, rawDept, rawNameLike, rawDate);
+    List<Commune> communes = null;
+    try {
+      Date date = decodeDate(rawDate);
+      // if Query Parameter "code" is present, ignore "dept" and "namelike"
+      if (rawCodes != null && !rawCodes.isEmpty()) {
+        String code = null;
+        Commune commune = null;
+        communes = new ArrayList<>(rawCodes.size());
+        for (String rawCode : rawCodes) {
+          code = decodeString(rawCode);
+          commune = communeService.getCommuneByCode(code, date);
+          if (commune != null) {
+            communes.add(commune);
+          }
+        }
+        log.debug("found {} communes for the given codes", communes.size());
+      }
+      // if Query Parameter "code" is NOT present, use "dept" and "namelike"
+      else {
+        String dept = decodeString(rawDept);
+        String nameLike = decodeString(rawNameLike);
+        communes = communeService.getAllCommune(dept, nameLike, date);
+        log.debug("found {} communes for the given criteria", communes.size());
+      }
+      // send response
+      if (communes == null || communes.isEmpty()) {
+        return Response.status(Response.Status.NOT_FOUND)
+                       .build();
+      } else {
+        return Response.ok(CommuneListDto.fromEntityList(communes))
+                       .build();
+      }
+    } catch (RestRequestException e) {
+      log.error(e.getMessage(), e);
+      return Response.status(Response.Status.BAD_REQUEST)
+                     .entity(e.getMessage())
+                     .build();
+    }
+  }
+ */
+
+
 }
