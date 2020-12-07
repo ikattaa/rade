@@ -64,6 +64,7 @@ public interface GenealogieEntiteAdminJpaDao
   * @param codeInsee
   * @return
   */
+  
   @Query(" SELECT g from  GenealogieEntiteAdmin g "
 		  +" JOIN Commune c ON g.parentEnfant.parent =c.id "
 		  + " WHERE c.id IN ("
@@ -73,6 +74,8 @@ public interface GenealogieEntiteAdminJpaDao
 				  +" JOIN Arrondissement a ON com.id=a.id "
 				  +" WHERE a.codeInsee= ?1)"
 		  + ")  ")
+ 
+
   public List<GenealogieEntiteAdmin> findGenealogieByCode(String codeInsee);
   /**
    * 
@@ -83,4 +86,13 @@ public interface GenealogieEntiteAdminJpaDao
   		+ "WHERE g.parentEnfant.parent.id=:idParent"
 		 )
   public List<Integer> findIdEnfantByIdParent(@Param("idParent") int idParent);
+  /**
+   * 
+   * @param idParent
+   * @return
+   */
+  @Query(" SELECT g from  GenealogieEntiteAdmin g "
+	  		+ "WHERE g.parentEnfant.parent.id=:idParent"
+			 )
+  public List<GenealogieEntiteAdmin> findGenealogieByIdParent(@Param("idParent") int idParent);
 }

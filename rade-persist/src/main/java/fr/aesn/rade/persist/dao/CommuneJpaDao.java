@@ -194,8 +194,7 @@ public Commune findCommuneByCodeInseeValidOnDate(String codeInsee, Date date);
           + " WHERE c.id IN (:ids) "
           + " AND (c.debutValidite IS NULL OR c.debutValidite <= :date)"
           + " AND (c.finValidite IS NULL OR c.finValidite > :date)"       
-          )
-  
+          )  
   public List<Commune> findAllCommuneEnfantActiveByCodeInseeInactiveValidOnDate(@Param("ids")List<Integer> ids,@Param("date")Date date);
 
 }

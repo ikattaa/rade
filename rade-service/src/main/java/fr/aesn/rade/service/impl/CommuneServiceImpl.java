@@ -35,6 +35,7 @@ import org.springframework.util.StringUtils;
 import fr.aesn.rade.common.InvalidArgumentException;
 import fr.aesn.rade.common.util.StringConversionUtils;
 import fr.aesn.rade.persist.dao.CommuneJpaDao;
+import fr.aesn.rade.persist.dao.EntiteAdministrativeJpaDao;
 import fr.aesn.rade.persist.dao.GenealogieEntiteAdminJpaDao;
 import fr.aesn.rade.persist.model.Audit;
 import fr.aesn.rade.persist.model.Commune;
@@ -65,6 +66,8 @@ public class CommuneServiceImpl
   private GenealogieEntiteAdminJpaDao genealogieEntiteAdminJpaDao;
   @Autowired @Setter
   private MetadataService metadataService;
+  @Autowired @Setter
+  private EntiteAdministrativeJpaDao entiteAdministrativeJpaDao ;
 
   /**
    * List all Commune.
@@ -1005,7 +1008,8 @@ public List<Commune> getAllCommuneEnfantActiveByCodeInactiveParent(String code, 
 	log.debug("Commune Parent Active requested by code and date: code={}, date={}", code, date);
 	Date testDate = (date == null ? new Date() : date);
 	
-	List<GenealogieEntiteAdmin> lListParentEnfant =genealogieEntiteAdminJpaDao.findGenealogieByCode(code);
+	int idEntiteAdmin =entiteAdministrativeJpaDao.getAllEntiteAdminByCode(code ).get(0).getId();
+	List<GenealogieEntiteAdmin> lListParentEnfant =genealogieEntiteAdminJpaDao.findGenealogieByIdParent(idEntiteAdmin);
 	
 	ArrayList<Integer> lListIdParent=new ArrayList<>();
 	ArrayList<Integer> lListIdEnfant=new ArrayList<>();
