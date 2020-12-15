@@ -33,13 +33,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class SpringSecurityConfig
   extends WebSecurityConfigurerAdapter {
-
-  /**
-   * Authentication Provider defined in Application Context configuration file.
-   */
-  @Autowired
-  private AuthenticationProvider authenticationProvider;
-
 //  @Autowired
 //  private AccessDeniedHandler accessDeniedHandler;
 
@@ -80,14 +73,5 @@ public class SpringSecurityConfig
           .permitAll();
 //          .and()
 //        .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
-  }
-
-  /**
-   * Set the Authentication Provider for the Bean in the Application Context.
-   * @param auth Spring AuthenticationManagerBuilder.
-   */
-  @Autowired
-  public void configureGlobal(final AuthenticationManagerBuilder auth) {
-    auth.authenticationProvider(authenticationProvider);
   }
 }

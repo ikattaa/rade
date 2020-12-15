@@ -159,6 +159,7 @@
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
   <!-- Local Authentication Provider with 2 accounts (user & admin) and password 123456 -->
+  <!-- -->
   <bean id="bCryptPasswordEncoder"
         class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
   <bean id="inMemoryUserDetailsManager"
@@ -175,8 +176,63 @@
         p:passwordEncoder-ref="bCryptPasswordEncoder"
         p:userDetailsService-ref="inMemoryUserDetailsManager"/>
 
+  <sec:authentication-manager>
+     <sec:authentication-provider ref="authenticationProvider"/>
+  </sec:authentication-manager>
+
+  
+  <!-- AESN CAS Authentication Provider -->
+  <!--
+  <sec:http entry-point-ref="spnegoEntryPoint" use-expressions="true" >
+    <sec:custom-filter ref="spnegoAuthenticationProcessingFilter"
+      before="BASIC_AUTH_FILTER" />
+  </sec:http>
+
+  <sec:authentication-manager alias="authenticationManager">
+    <sec:authentication-provider ref="kerberosAuthenticationProvider" />
+    <sec:authentication-provider ref="kerberosServiceAuthenticationProvider" />
+  </sec:authentication-manager>
+
+  <bean id="kerberosAuthenticationProvider"
+    class="org.springframework.security.kerberos.authentication.KerberosAuthenticationProvider">
+    <property name="userDetailsService" ref="dummyUserDetailsService"/>
+    <property name="kerberosClient">
+      <bean class="org.springframework.security.kerberos.authentication.sun.SunJaasKerberosClient">
+        <property name="debug" value="true"/>
+      </bean>
+    </property>
+  </bean>
+
+  <bean id="spnegoEntryPoint"
+    class="org.springframework.security.kerberos.web.authentication.SpnegoEntryPoint" >
+    <constructor-arg value="/login" />
+  </bean>
+
+  <bean id="spnegoAuthenticationProcessingFilter"
+    class="org.springframework.security.kerberos.web.authentication.SpnegoAuthenticationProcessingFilter">
+    <property name="authenticationManager" ref="authenticationManager" />
+  </bean>
+
+  <bean id="kerberosServiceAuthenticationProvider"
+    class="org.springframework.security.kerberos.authentication.KerberosServiceAuthenticationProvider">
+    <property name="ticketValidator">
+      <bean
+        class="org.springframework.security.kerberos.authentication.sun.SunJaasKerberosTicketValidator">
+        <property name="servicePrincipal" value="${app.service-principal}" />
+        <property name="keyTabLocation" value="${app.keytab-location}" />
+        <property name="debug" value="true" />
+      </bean>
+    </property>
+    <property name="userDetailsService" ref="dummyUserDetailsService" />
+  </bean>
+
+  <bean id="dummyUserDetailsService"
+    class="org.springframework.security.kerberos.docs.DummyUserDetailsService" />
+    -->
+
+
   <!-- AESN Habilitations Authentication Provider -->
-<!--
+  <!--
   <bean id="habilitationsServiceFactory"
         class="fr.aesn.rade.habilitations.HabilitationsServiceFactory"
         p:habilitationsWsdlUrl="${habilitations.url}"/>
@@ -189,6 +245,9 @@
   <bean id="habilitationsHealthIndicator"
         class="fr.aesn.rade.habilitations.HabilitationsHealthIndicator"
         p:factory-ref="habilitationsServiceFactory"/>
+  <sec:authentication-manager>
+     <sec:authentication-provider ref="authenticationProvider"/>
+  </sec:authentication-manager>
 -->
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
