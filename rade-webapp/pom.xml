@@ -122,6 +122,22 @@
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-cas</artifactId>
     </dependency>
+     <!-- Spring Security Kerberos -->
+    <dependency>
+	    <groupId>org.springframework.security.kerberos</groupId>
+	    <artifactId>spring-security-kerberos-web</artifactId>
+	    <version>1.0.1.RELEASE</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework.security.kerberos</groupId>
+	    <artifactId>spring-security-kerberos-client</artifactId>
+	    <version>1.0.1.RELEASE</version>
+	</dependency>
+		<dependency>
+	    <groupId>org.springframework.security.kerberos</groupId>
+	    <artifactId>spring-security-kerberos-core</artifactId>
+	    <version>1.0.1.RELEASE</version>
+	</dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>

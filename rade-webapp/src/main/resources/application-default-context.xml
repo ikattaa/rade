@@ -159,7 +159,7 @@
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
   <!-- Local Authentication Provider with 2 accounts (user & admin) and password 123456 -->
-  <!-- -->
+  <!--   -->
   <bean id="bCryptPasswordEncoder"
         class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
   <bean id="inMemoryUserDetailsManager"
@@ -180,9 +180,8 @@
      <sec:authentication-provider ref="authenticationProvider"/>
   </sec:authentication-manager>
 
-  
   <!-- AESN CAS Authentication Provider -->
-  <!--
+  <!-- 
   <sec:http entry-point-ref="spnegoEntryPoint" use-expressions="true" >
     <sec:custom-filter ref="spnegoAuthenticationProcessingFilter"
       before="BASIC_AUTH_FILTER" />
@@ -195,7 +194,7 @@
 
   <bean id="kerberosAuthenticationProvider"
     class="org.springframework.security.kerberos.authentication.KerberosAuthenticationProvider">
-    <property name="userDetailsService" ref="dummyUserDetailsService"/>
+    <property name="userDetailsService" ref="aesnCasUserDetailsService"/>
     <property name="kerberosClient">
       <bean class="org.springframework.security.kerberos.authentication.sun.SunJaasKerberosClient">
         <property name="debug" value="true"/>
@@ -223,13 +222,12 @@
         <property name="debug" value="true" />
       </bean>
     </property>
-    <property name="userDetailsService" ref="dummyUserDetailsService" />
+    <property name="userDetailsService" ref="aesnCasUserDetailsService" />
   </bean>
 
-  <bean id="dummyUserDetailsService"
-    class="org.springframework.security.kerberos.docs.DummyUserDetailsService" />
-    -->
-
+  <bean id="aesnCasUserDetailsService"
+    class="fr.aesn.rade.habilitations.AesnCasUserDetailsService" />
+  -->
 
   <!-- AESN Habilitations Authentication Provider -->
   <!--

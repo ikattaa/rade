@@ -17,13 +17,26 @@
 /* $Id$ */
 package fr.aesn.rade.habilitations;
 
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 /**
- * Custom AuthenticationProvider for Spring Security that uses AESN CAS server
+ * Custom UserDetailsService for Spring Security that uses AESN CAS server
  * to authenticate users, and queries the AESN Active Directory to recover
  * User Roles.
  *
  * @author Marc Gimpel (mgimpel@gmail.com)
  */
-public class AesnCasAuthenticationProvider {
-  //TODO implement CAS Authentication and AD Role listing
+public class AesnCasUserDetailsService implements UserDetailsService {
+
+    @Override
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+        return new User(username, "notUsed", true, true, true, true,
+                AuthorityUtils.createAuthorityList("ROLE_USER"));
+    }
+
 }
