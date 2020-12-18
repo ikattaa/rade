@@ -106,38 +106,22 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-config</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-taglibs</artifactId>
-    </dependency>
+	<dependency>
+		<groupId>org.springframework.security</groupId>
+		<artifactId>spring-security-web</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework.security</groupId>
+		<artifactId>spring-security-config</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework.security</groupId>
+		<artifactId>spring-security-taglibs</artifactId>
+	</dependency>
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-cas</artifactId>
     </dependency>
-     <!-- Spring Security Kerberos -->
-    <dependency>
-	    <groupId>org.springframework.security.kerberos</groupId>
-	    <artifactId>spring-security-kerberos-web</artifactId>
-	    <version>1.0.1.RELEASE</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.springframework.security.kerberos</groupId>
-	    <artifactId>spring-security-kerberos-client</artifactId>
-	    <version>1.0.1.RELEASE</version>
-	</dependency>
-		<dependency>
-	    <groupId>org.springframework.security.kerberos</groupId>
-	    <artifactId>spring-security-kerberos-core</artifactId>
-	    <version>1.0.1.RELEASE</version>
-	</dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>
@@ -301,6 +285,13 @@
       <artifactId>taglibs-standard-impl</artifactId>
       <scope>provided</scope>
     </dependency>
+
+	<!-- Inject -->
+	<dependency>
+		<groupId>javax.inject</groupId>
+		<artifactId>javax.inject</artifactId>
+		<version>1</version>
+	</dependency>
   </dependencies>
 
   <build>
