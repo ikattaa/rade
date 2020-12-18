@@ -80,7 +80,7 @@ extends WebSecurityConfigurerAdapter {
 	 * Authentication Provider defined in Application Context configuration file.
 	 */
 	@Autowired
-	private AuthenticationProvider formAuthenticationProvider;
+	private AuthenticationProvider authenticationProvider;
 
 	/**
 	 * Configure Security Access
@@ -116,7 +116,7 @@ extends WebSecurityConfigurerAdapter {
 
 		if(env.getRequiredProperty(CAS_ON)!=null && "true".compareTo(env.getRequiredProperty(CAS_ON)) == 0){
 			http.httpBasic()
-			.authenticationEntryPoint(casAuthenticationEntryPoint()).and().addFilter(casAuthenticationFilter())
+			.authenticationEntryPoint(casAuthenticationEntryPoint()).defaultSuccessUrl("/").and().addFilter(casAuthenticationFilter())
 			.addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
 			.addFilterBefore(requestCasGlobalLogoutFilter(), LogoutFilter.class);
 			http.logout().logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
@@ -200,7 +200,7 @@ extends WebSecurityConfigurerAdapter {
 		if(env.getRequiredProperty(CAS_ON)!=null && "true".compareTo(env.getRequiredProperty(CAS_ON)) == 0){
 			auth.authenticationProvider(casAuthenticationProvider());
 		}else{
-			auth.authenticationProvider(formAuthenticationProvider);
+			auth.authenticationProvider(authenticationProvider);
 		}
 	}
 

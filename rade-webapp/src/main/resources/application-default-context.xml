@@ -170,7 +170,7 @@
       </props>
     </constructor-arg>
   </bean>
-  <bean id="formAuthenticationProvider"
+  <bean id="authenticationProvider"
         class="org.springframework.security.authentication.dao.DaoAuthenticationProvider"
         p:passwordEncoder-ref="bCryptPasswordEncoder"
         p:userDetailsService-ref="inMemoryUserDetailsManager"/>
@@ -183,7 +183,7 @@
   <bean id="habilitationsService"
         factory-bean="habilitationsServiceFactory"
         factory-method="getHabilitationsService"/>
-  <bean id="formAuthenticationProvider"
+  <bean id="authenticationProvider"
         class="fr.aesn.rade.habilitations.HabilitationsAuthenticationProvider"
         p:habilitationsService-ref="habilitationsService"/>
   <bean id="habilitationsHealthIndicator"
