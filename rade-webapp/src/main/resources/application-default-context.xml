@@ -157,57 +157,8 @@
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <!-- Spring Security -->
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-  <!--
-  <bean id="serviceProperties"
-        class="org.springframework.security.cas.ServiceProperties">
-    <property name="service"
-        value="https://localhost:8080/"/>
-    <property name="sendRenew" value="false"/>
-  </bean>
   
-  <sec:http entry-point-ref="authenticationEntryPoint">
-   <sec:custom-filter position="CAS_FILTER" ref="casFilter" />
-  </sec:http>
-  
-  <bean id="casFilter"
-        class="org.springframework.security.cas.web.CasAuthenticationFilter">
-    <property name="authenticationManager" ref="authenticationManager"/>
-	<property name="authenticationSuccessHandler">
-      <bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
-        <property name="defaultTargetUrl" value="/"/>
-      </bean>
-    </property>
-  </bean>
-  
-  <bean id="authenticationEntryPoint"
-      class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
-    <property name="loginUrl" value="http://10.132.140.20:8080/cas/login"/>
-    <property name="serviceProperties" ref="serviceProperties"/>
-  </bean>
-
-  <sec:authentication-manager alias="authenticationManager">
-    <sec:authentication-provider ref="authenticationProvider" />
-  </sec:authentication-manager>
-
-  <bean id="authenticationProvider"
-      class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
-    <property name="userDetailsService" ref="aesnCasUserDetailsService"/>
-    <property name="serviceProperties" ref="serviceProperties" />
-    <property name="ticketValidator">
-      <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
-        <constructor-arg index="0" value="http://10.132.140.20:8080/cas" />
-        </bean>
-    </property>
-    <property name="key" value="cas_aesn"/>
-  </bean>
-	
-  <bean id="aesnCasUserDetailsService"
-    class="fr.aesn.rade.habilitations.AesnCasUserDetailsService" />
-  -->
-    
-  <!-- Local Authentication Provider with 2 accounts (user & admin) and password 123456 -->
-  <!--   
+  <!-- Local Authentication Provider with 2 accounts (user & admin) and password 123456 --> 
   <bean id="bCryptPasswordEncoder"
         class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
   <bean id="inMemoryUserDetailsManager"
@@ -219,65 +170,11 @@
       </props>
     </constructor-arg>
   </bean>
-  <bean id="authenticationProvider"
+  <bean id="formAuthenticationProvider"
         class="org.springframework.security.authentication.dao.DaoAuthenticationProvider"
         p:passwordEncoder-ref="bCryptPasswordEncoder"
         p:userDetailsService-ref="inMemoryUserDetailsManager"/>
-
-  <sec:authentication-manager>
-     <sec:authentication-provider ref="authenticationProvider"/>
-  </sec:authentication-manager>
-  -->
-
-  <!-- AESN CAS Authentication Provider -->
-  <!-- 
-  <sec:http entry-point-ref="spnegoEntryPoint" use-expressions="true" >
-    <sec:custom-filter ref="spnegoAuthenticationProcessingFilter"
-      before="BASIC_AUTH_FILTER" />
-  </sec:http>
-
-  <sec:authentication-manager alias="authenticationManager">
-    <sec:authentication-provider ref="kerberosAuthenticationProvider" />
-    <sec:authentication-provider ref="kerberosServiceAuthenticationProvider" />
-  </sec:authentication-manager>
-
-  <bean id="kerberosAuthenticationProvider"
-    class="org.springframework.security.kerberos.authentication.KerberosAuthenticationProvider">
-    <property name="userDetailsService" ref="aesnCasUserDetailsService"/>
-    <property name="kerberosClient">
-      <bean class="org.springframework.security.kerberos.authentication.sun.SunJaasKerberosClient">
-        <property name="debug" value="true"/>
-      </bean>
-    </property>
-  </bean>
-
-  <bean id="spnegoEntryPoint"
-    class="org.springframework.security.kerberos.web.authentication.SpnegoEntryPoint" >
-    <constructor-arg value="/login" />
-  </bean>
-
-  <bean id="spnegoAuthenticationProcessingFilter"
-    class="org.springframework.security.kerberos.web.authentication.SpnegoAuthenticationProcessingFilter">
-    <property name="authenticationManager" ref="authenticationManager" />
-  </bean>
-
-  <bean id="kerberosServiceAuthenticationProvider"
-    class="org.springframework.security.kerberos.authentication.KerberosServiceAuthenticationProvider">
-    <property name="ticketValidator">
-      <bean
-        class="org.springframework.security.kerberos.authentication.sun.SunJaasKerberosTicketValidator">
-        <property name="servicePrincipal" value="${app.service-principal}" />
-        <property name="keyTabLocation" value="${app.keytab-location}" />
-        <property name="debug" value="true" />
-      </bean>
-    </property>
-    <property name="userDetailsService" ref="aesnCasUserDetailsService" />
-  </bean>
-
-  <bean id="aesnCasUserDetailsService"
-    class="fr.aesn.rade.habilitations.AesnCasUserDetailsService" />
-  -->
-
+        
   <!-- AESN Habilitations Authentication Provider -->
   <!--
   <bean id="habilitationsServiceFactory"
@@ -286,16 +183,14 @@
   <bean id="habilitationsService"
         factory-bean="habilitationsServiceFactory"
         factory-method="getHabilitationsService"/>
-  <bean id="authenticationProvider"
+  <bean id="formAuthenticationProvider"
         class="fr.aesn.rade.habilitations.HabilitationsAuthenticationProvider"
         p:habilitationsService-ref="habilitationsService"/>
   <bean id="habilitationsHealthIndicator"
         class="fr.aesn.rade.habilitations.HabilitationsHealthIndicator"
         p:factory-ref="habilitationsServiceFactory"/>
-  <sec:authentication-manager>
-     <sec:authentication-provider ref="authenticationProvider"/>
-  </sec:authentication-manager>
--->
+  -->
+
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <!-- Spring MVC -->

@@ -66,14 +66,21 @@ import javax.inject.Inject;
 @Slf4j
 public class SpringSecurityConfig
 extends WebSecurityConfigurerAdapter {
+	private static final String CAS_ON = "cas.on";
 	private static final String CAS_URL_LOGIN = "cas.service.login";
 	private static final String CAS_URL_LOGOUT = "cas.service.logout";
 	private static final String CAS_URL_PREFIX = "cas.url.prefix";
 	private static final String CAS_SERVICE_URL = "app.service.security";
 	private static final String APP_SERVICE_HOME = "app.service.home";
-	
+
 	@Inject
 	private Environment env;
+
+	/**
+	 * Authentication Provider defined in Application Context configuration file.
+	 */
+	@Autowired
+	private AuthenticationProvider formAuthenticationProvider;
 
 	/**
 	 * Configure Security Access
@@ -82,7 +89,7 @@ extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(final HttpSecurity http)
 			throws Exception {
-		
+
 		http.csrf().disable()
 		.authorizeRequests()
 		// SOAP & REST WebServices (CXF) : no restrictions
@@ -97,7 +104,6 @@ extends WebSecurityConfigurerAdapter {
 		.antMatchers("/webjars/**").permitAll()
 		// Search queries open to all
 		.antMatchers("/referentiel/**").permitAll()
-		.antMatchers("/j_spring_cas_security_check").permitAll()
 		// Admin files : require administrator role
 		.antMatchers("/admin/**", "/batch/**").hasAuthority("RAD_ADMIN")
 		// User files : require any role
@@ -106,15 +112,21 @@ extends WebSecurityConfigurerAdapter {
 		.anyRequest().authenticated()
 		.and()
 		.logout()
-		.permitAll()
-		.and()
-		.httpBasic()
-		.authenticationEntryPoint(casAuthenticationEntryPoint()).and().addFilter(casAuthenticationFilter())
-		.addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
-		.addFilterBefore(requestCasGlobalLogoutFilter(), LogoutFilter.class);
-		
-		http.logout().logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
-		.deleteCookies("JSESSIONID");
+		.permitAll();
+
+		if(env.getRequiredProperty(CAS_ON)!=null && "true".compareTo(env.getRequiredProperty(CAS_ON)) == 0){
+			http.httpBasic()
+			.authenticationEntryPoint(casAuthenticationEntryPoint()).and().addFilter(casAuthenticationFilter())
+			.addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
+			.addFilterBefore(requestCasGlobalLogoutFilter(), LogoutFilter.class);
+			http.logout().logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
+			.deleteCookies("JSESSIONID");
+		}else{
+			http.formLogin()
+			.loginPage("/login")
+			.defaultSuccessUrl("/")
+			.permitAll();
+		}
 	}
 
 	@Bean
@@ -185,7 +197,11 @@ extends WebSecurityConfigurerAdapter {
 
 	@Inject
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(casAuthenticationProvider());
+		if(env.getRequiredProperty(CAS_ON)!=null && "true".compareTo(env.getRequiredProperty(CAS_ON)) == 0){
+			auth.authenticationProvider(casAuthenticationProvider());
+		}else{
+			auth.authenticationProvider(formAuthenticationProvider);
+		}
 	}
 
 }
