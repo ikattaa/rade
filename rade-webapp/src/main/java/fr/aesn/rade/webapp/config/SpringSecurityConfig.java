@@ -116,7 +116,7 @@ extends WebSecurityConfigurerAdapter {
 
 		if(env.getRequiredProperty(CAS_ON)!=null && "true".compareTo(env.getRequiredProperty(CAS_ON)) == 0){
 			http.httpBasic()
-			.authenticationEntryPoint(casAuthenticationEntryPoint()).defaultSuccessUrl("/").and().addFilter(casAuthenticationFilter())
+			.authenticationEntryPoint(casAuthenticationEntryPoint()).and().addFilter(casAuthenticationFilter())
 			.addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
 			.addFilterBefore(requestCasGlobalLogoutFilter(), LogoutFilter.class);
 			http.logout().logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
