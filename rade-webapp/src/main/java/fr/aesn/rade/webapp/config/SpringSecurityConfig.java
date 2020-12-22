@@ -66,7 +66,7 @@ import javax.inject.Inject;
 @Slf4j
 public class SpringSecurityConfig
 extends WebSecurityConfigurerAdapter {
-	private static final String CAS_ON = "cas.on";
+	private static final String CAS_ACTIVE = "cas.active";
 	private static final String CAS_URL_LOGIN = "cas.service.login";
 	private static final String CAS_URL_LOGOUT = "cas.service.logout";
 	private static final String CAS_URL_PREFIX = "cas.url.prefix";
@@ -114,7 +114,7 @@ extends WebSecurityConfigurerAdapter {
 		.logout()
 		.permitAll();
 
-		if(env.getRequiredProperty(CAS_ON)!=null && "true".compareTo(env.getRequiredProperty(CAS_ON)) == 0){
+		if(env.getRequiredProperty(CAS_ACTIVE)!=null && "true".compareTo(env.getRequiredProperty(CAS_ACTIVE)) == 0){
 			http.httpBasic()
 			.authenticationEntryPoint(casAuthenticationEntryPoint()).and().addFilter(casAuthenticationFilter())
 			.addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
@@ -197,7 +197,7 @@ extends WebSecurityConfigurerAdapter {
 
 	@Inject
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		if(env.getRequiredProperty(CAS_ON)!=null && "true".compareTo(env.getRequiredProperty(CAS_ON)) == 0){
+		if(env.getRequiredProperty(CAS_ACTIVE)!=null && "true".compareTo(env.getRequiredProperty(CAS_ACTIVE)) == 0){
 			auth.authenticationProvider(casAuthenticationProvider());
 		}else{
 			auth.authenticationProvider(authenticationProvider);
