@@ -127,6 +127,32 @@ public interface RestService {
                                 @QueryParam("namelike") final String rawNameLike,
                                 @QueryParam("date") final String rawDate);
 
+  
+  // modification du web service 
+  /**
+   * Get all Commune matching the request parameters.
+   * @param req HTTP Request (for determining base path of Rest Service).
+   * @param rawCodes list of INSEE code of the Commune
+   * (if no codes are given dept and namelike are used). 
+   * @param rawDept the Departement INSEE code of the Commune
+   * (not used if codes are given).
+   * @param rawNameLike a part of the Commune enrich name
+   * (not used if codes are given).
+   * @param rawDate the date at which the returned data is valid.
+   * @return list of all Commune matching the request parameters.
+   */
+  @GET
+  @Path(REST_PATH_COMMUNE)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getAllCommunes(@Context final HttpServletRequest req,
+                                @QueryParam("code") final List<String> rawCodes,
+                                @QueryParam("dept") final String rawDept,
+                                @QueryParam("namelike") final String rawNameLike,
+                                @QueryParam("date") final String rawDate,
+                                @QueryParam("genealogie") final String rawgenealogie);
+  
+  
+  
   /**
    * Get the Commune with the given INSEE code.
    * @param req HTTP Request (for determining base path of Rest Service).

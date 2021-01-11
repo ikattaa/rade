@@ -80,12 +80,12 @@ public class GenealogieEntiteAdmin implements Serializable {
     private static final long serialVersionUID = -1832480232514464075L;
 
     /** Entité Administrative parent de la relation. */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PARENT", nullable = false)
     private EntiteAdministrative parent;
 
     /** Entité Administrative enfant de la relation. */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ENFANT", nullable = false)
     private EntiteAdministrative enfant;
   }

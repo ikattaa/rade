@@ -17,9 +17,12 @@
 /* $Id$ */
 package fr.aesn.rade.persist.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.aesn.rade.persist.model.GenealogieEntiteAdmin;
@@ -56,4 +59,40 @@ public interface GenealogieEntiteAdminJpaDao
   @Query("DELETE FROM GenealogieEntiteAdmin g"
              + " WHERE g.parentEnfant.parent IN (SELECT r FROM Region r)")
   public void deleteAllRegion();
+ /**
+  * 
+  * @param codeInsee
+  * @return
+  */
+  
+  @Query(" SELECT g from  GenealogieEntiteAdmin g "
+		  +" JOIN Commune c ON g.parentEnfant.parent =c.id "
+		  + " WHERE c.id IN ("
+		  + " SELECT co.id from Commune co WHERE "
+		  +"co.codeInsee= ?1 OR co.id=( "
+				  +" SELECT com.id FROM Commune com "
+				  +" JOIN Arrondissement a ON com.id=a.id "
+				  +" WHERE a.codeInsee= ?1)"
+		  + ")  ")
+ 
+
+  public List<GenealogieEntiteAdmin> findGenealogieByCode(String codeInsee);
+  /**
+   * 
+   * @param idParent
+   * @return la list des ids enfants 
+   */
+  @Query(" SELECT g.parentEnfant.enfant.id from  GenealogieEntiteAdmin g "
+  		+ "WHERE g.parentEnfant.parent.id=:idParent"
+		 )
+  public List<Integer> findIdEnfantByIdParent(@Param("idParent") int idParent);
+  /**
+   * 
+   * @param idParent
+   * @return
+   */
+  @Query(" SELECT g from  GenealogieEntiteAdmin g "
+	  		+ "WHERE g.parentEnfant.parent.id=:idParent"
+			 )
+  public List<GenealogieEntiteAdmin> findGenealogieByIdParent(@Param("idParent") int idParent);
 }

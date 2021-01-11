@@ -17,13 +17,16 @@
 /* $Id$ */
 package fr.aesn.rade.persist.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import fr.aesn.rade.persist.model.Commune;
+import fr.aesn.rade.persist.model.GenealogieEntiteAdmin;
 
 /**
  * JPA DataAccessObject for Commune.
@@ -169,4 +172,29 @@ public interface CommuneJpaDao
   public List<Commune> findByRegionLikeAndNomEnrichiLikeIgnoreCaseValidOnDate(String region, 
                                                                               String nameLike, 
                                                                               Date date);
+  
+  @Query("SELECT c FROM Commune c"
+		   + " WHERE( c.codeInsee = ?1 "
+		   + " OR c.id = (SELECT cb.id FROM Commune cb"
+		   + " JOIN Arrondissement a ON cb.id = a.id"
+		   + " WHERE a.codeInsee= ?1 ))"
+	       + " AND (c.debutValidite IS NULL OR c.debutValidite <= ?2)"
+	       + " AND (c.finValidite IS NULL OR c.finValidite > ?2)"
+		   )
+public Commune findCommuneByCodeInseeValidOnDate(String codeInsee, Date date);
+  
+  
+  /**
+   * 
+   * @param ids list ids commune
+   * @param date date the date at which the Communes were valid.
+   * @return a List of all Commune matching the given parameters.
+   */
+  @Query("SELECT c FROM Commune c"
+          + " WHERE c.id IN (:ids) "
+          + " AND (c.debutValidite IS NULL OR c.debutValidite <= :date)"
+          + " AND (c.finValidite IS NULL OR c.finValidite > :date)"       
+          )  
+  public List<Commune> findAllCommuneEnfantActiveByCodeInseeInactiveValidOnDate(@Param("ids")List<Integer> ids,@Param("date")Date date);
+
 }

@@ -19,8 +19,10 @@ package fr.aesn.rade.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,9 +35,11 @@ import org.springframework.util.StringUtils;
 import fr.aesn.rade.common.InvalidArgumentException;
 import fr.aesn.rade.common.util.StringConversionUtils;
 import fr.aesn.rade.persist.dao.CommuneJpaDao;
+import fr.aesn.rade.persist.dao.EntiteAdministrativeJpaDao;
 import fr.aesn.rade.persist.dao.GenealogieEntiteAdminJpaDao;
 import fr.aesn.rade.persist.model.Audit;
 import fr.aesn.rade.persist.model.Commune;
+import fr.aesn.rade.persist.model.EntiteAdministrative;
 import fr.aesn.rade.persist.model.GenealogieEntiteAdmin;
 import fr.aesn.rade.persist.model.GenealogieEntiteAdmin.ParentEnfant;
 import fr.aesn.rade.persist.model.TypeGenealogieEntiteAdmin;
@@ -62,6 +66,8 @@ public class CommuneServiceImpl
   private GenealogieEntiteAdminJpaDao genealogieEntiteAdminJpaDao;
   @Autowired @Setter
   private MetadataService metadataService;
+  @Autowired @Setter
+  private EntiteAdministrativeJpaDao entiteAdministrativeJpaDao ;
 
   /**
    * List all Commune.
@@ -986,4 +992,69 @@ public class CommuneServiceImpl
     commune.setFinValidite(dateEffective);
     return communeJpaDao.save(commune);
   }
+
+  @Override
+  @Transactional(readOnly = true)
+public Commune getCommuneActiveByCode(String code, Date date) {
+	 log.debug("Commune Active requested by code and date: code={}, date={}", code, date);
+	 Date testDate = (date == null ? new Date() : date);
+	 return communeJpaDao.findCommuneByCodeInseeValidOnDate(code, testDate);
+	
+}
+
+@Override
+@Transactional(readOnly = true)
+public List<Commune> getAllCommuneEnfantActiveByCodeInactiveParent(String code, Date date) {
+	log.debug("Commune Parent Active requested by code and date: code={}, date={}", code, date);
+	Date testDate = (date == null ? new Date() : date);
+	
+	int idEntiteAdmin =entiteAdministrativeJpaDao.getAllEntiteAdminByCode(code ).get(0).getId();
+	List<GenealogieEntiteAdmin> lListParentEnfant =genealogieEntiteAdminJpaDao.findGenealogieByIdParent(idEntiteAdmin);
+	
+	ArrayList<Integer> lListIdParent=new ArrayList<>();
+	ArrayList<Integer> lListIdEnfant=new ArrayList<>();
+	ArrayList<Integer> lListIdDernierEnfant=new ArrayList<>();
+	HashSet<Integer> lListIdEnfantUnique=new HashSet<>();
+	HashSet<Integer> lListIdParentUnique = new HashSet<>();
+	List<Commune> communes =null;
+	
+	if(lListParentEnfant!=null) {
+		for(GenealogieEntiteAdmin genealogieEntiteAdmin :lListParentEnfant) {
+			lListIdParent.add(genealogieEntiteAdmin.getParentEnfant().getParent().getId());
+			lListIdEnfant.add(genealogieEntiteAdmin.getParentEnfant().getEnfant().getId());
+		}
+		
+		lListIdParentUnique.addAll(lListIdParent);
+		lListIdEnfantUnique.addAll(lListIdEnfant);	
+		// retirer les enfants qui ont des enfants
+		for (Integer i :lListIdParentUnique) {
+			if(lListIdEnfant.contains(i)) {
+				lListIdEnfantUnique.remove(i);
+			}		
+		}
+		
+		
+		ArrayList<Integer>lIdEnfantList=new ArrayList<>(lListIdEnfantUnique);
+		int i=0;
+		// recuperer les derniers petits fils
+		
+		while (!lIdEnfantList.isEmpty()) {
+			
+				List<Integer> llistEnfantByIdParent=genealogieEntiteAdminJpaDao.findIdEnfantByIdParent(lIdEnfantList.get(i));
+				if(llistEnfantByIdParent==null || llistEnfantByIdParent.size()==0) {
+					lListIdDernierEnfant.add(lIdEnfantList.get(i));
+				}else {
+					lIdEnfantList.addAll(llistEnfantByIdParent);
+				}
+				lIdEnfantList.remove(lIdEnfantList.get(i));
+		}
+		
+		if(!lListIdDernierEnfant.isEmpty()) {
+			communes =communeJpaDao.findAllCommuneEnfantActiveByCodeInseeInactiveValidOnDate(lListIdDernierEnfant,testDate);
+		}
+		
+	}
+	return communes;
+	}
+
 }
