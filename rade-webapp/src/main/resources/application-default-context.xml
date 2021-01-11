@@ -156,8 +156,8 @@
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <!-- Spring Security -->
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-  <!-- Local Authentication Provider with 2 accounts (user & admin) and password 123456 -->
+  
+  <!-- Local Authentication Provider with 2 accounts (user & admin) and password 123456 --> 
   <bean id="bCryptPasswordEncoder"
         class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
   <bean id="inMemoryUserDetailsManager"
@@ -173,9 +173,9 @@
         class="org.springframework.security.authentication.dao.DaoAuthenticationProvider"
         p:passwordEncoder-ref="bCryptPasswordEncoder"
         p:userDetailsService-ref="inMemoryUserDetailsManager"/>
-
+        
   <!-- AESN Habilitations Authentication Provider -->
-<!--
+  <!--
   <bean id="habilitationsServiceFactory"
         class="fr.aesn.rade.habilitations.HabilitationsServiceFactory"
         p:habilitationsWsdlUrl="${habilitations.url}"/>
@@ -188,7 +188,8 @@
   <bean id="habilitationsHealthIndicator"
         class="fr.aesn.rade.habilitations.HabilitationsHealthIndicator"
         p:factory-ref="habilitationsServiceFactory"/>
--->
+  -->
+
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <!-- Spring MVC -->
