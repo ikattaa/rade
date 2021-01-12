@@ -22,7 +22,7 @@
 
   <groupId>fr.aesn.rade</groupId>
   <artifactId>rade</artifactId>
-  <version>0.13-SNAPSHOT</version>
+  <version>0.12-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Rade Project</name>
