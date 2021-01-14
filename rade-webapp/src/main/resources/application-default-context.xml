@@ -179,14 +179,15 @@
         p:userDetailsService-ref="inMemoryUserDetailsManager"/>
         
   <!-- AESN Habilitations Authentication Provider -->
-  <!--
+  
   <bean id="habilitationsServiceFactory"
         class="fr.aesn.rade.habilitations.HabilitationsServiceFactory"
         p:habilitationsWsdlUrl="${habilitations.url}"/>
   <bean id="habilitationsService"
         factory-bean="habilitationsServiceFactory"
         factory-method="getHabilitationsService"/>
-  <bean id="authenticationProvider"
+        
+ <!--   <bean id="authenticationProvider"
         class="fr.aesn.rade.habilitations.HabilitationsAuthenticationProvider"
         p:habilitationsService-ref="habilitationsService"/>
   <bean id="habilitationsHealthIndicator"

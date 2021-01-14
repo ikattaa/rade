@@ -17,6 +17,7 @@
 /* $Id$ */
 package fr.aesn.rade.habilitations;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +29,15 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import fr.aesn.rade.habilitations.ws.HabilitationsUtilisateurSrv;
+import fr.aesn.rade.habilitations.ws.RoleBean;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,7 +49,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class AesnCasUserDetailsService implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
-
+	@Autowired
+	 HabilitationsUtilisateurSrv habilitationsService;
 	public AesnCasUserDetailsService() {
 		super();
 	}
@@ -50,13 +59,24 @@ public class AesnCasUserDetailsService implements AuthenticationUserDetailsServi
 	public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) throws UsernameNotFoundException {
 		String login = token.getPrincipal().toString();
 		String lowercaseLogin = login.toLowerCase();
-
-		log.info("User authenticated: {}", login);
-		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-    	grantedAuthorities.add(new SimpleGrantedAuthority("RAD_ADMIN"));
-    	grantedAuthorities.add(new SimpleGrantedAuthority("RAD_GESTION"));
-    	grantedAuthorities.add(new SimpleGrantedAuthority("RAD_CONSULT"));
-    
+		log.info("User authenticated lowercaseLogin: {}", lowercaseLogin);		
+	    List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+	    RoleBean[] roles;
+	    
+	    try {
+	    	roles  = habilitationsService.getRolesDunPerimetre(lowercaseLogin, null);
+	    	for(RoleBean role :roles) {
+	    		String  code = role.getCode();
+	    		if (code != null && code.startsWith("RAD_")) {
+	    			log.info("Role found for user {}: {}", login, code);
+	    			grantedAuthorities.add(new SimpleGrantedAuthority(code));
+	    		} 
+	    	}
+	    }catch(RemoteException e) {
+	        log.debug("Unable to list user roles for {}", login, e);
+	        throw new AuthenticationServiceException("Unable to list user roles for "+ login, e);
+	    }
+	    
 		return new User(lowercaseLogin,"not_used", grantedAuthorities);
 	}
 }
