@@ -23,7 +23,7 @@
   <parent>
     <groupId>fr.aesn.rade</groupId>
     <artifactId>rade</artifactId>
-    <version>0.12</version>
+    <version>0.12-SNAPSHOT</version>
   </parent>
   <artifactId>rade-rpm</artifactId>
   <packaging>${rpm.artifact}</packaging>
