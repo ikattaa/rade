@@ -112,7 +112,7 @@ public class TestTypeGenealogieEntiteAdmin extends AbstractTestEntity {
     List<TypeGenealogieEntiteAdmin> objs = entityManager.createQuery("FROM TypeGenealogieEntiteAdmin", TypeGenealogieEntiteAdmin.class).getResultList();
     assertNotNull("Hibernate didn't return a List", objs);
     assertEquals("Hibernate returned a List, but the wrong size",
-                 52, objs.size());
+                 63, objs.size());
     for (TypeGenealogieEntiteAdmin obj: objs) {
       assertNotNull("Hibernate returned a List but an Entity is null", obj);
     }

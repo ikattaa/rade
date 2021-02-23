@@ -231,15 +231,16 @@ public class TestHistoriqueCommuneImportBatch {
     		assertEquals("Mismatched CodeInsee", commune.getCodeInsee(), test.getCodeInsee());
     		assertEquals("Mismatched Departement", commune.getDepartement(), test.getDepartement());
     		assertEquals("Mismatched ArticleEnrichi", commune.getArticleEnrichi(), test.getArticleEnrichi());
-    		//assertEquals("Mismatched NomMajuscule", normalize(commune.getNomMajuscule()), normalize(test.getNomMajuscule()));
-    		//assertEquals("Mismatched NomEnrichi", normalize(commune.getNomEnrichi()), normalize(test.getNomEnrichi()));
-    		if( !commune.getNomMajuscule().equals(test.getNomMajuscule()) || !commune.getNomEnrichi().equals(test.getNomEnrichi()) ){
+    		assertEquals("Mismatched NomMajuscule", commune.getNomMajuscule(), test.getNomMajuscule());
+    		assertEquals("Mismatched NomEnrichi", commune.getNomEnrichi(), test.getNomEnrichi());
+    		// !!! Il existe des des incohérences dans les fichiers INSEE, il est possible de remplacer les assert par des messages:
+    		/*if( !commune.getNomMajuscule().equals(test.getNomMajuscule()) || !commune.getNomEnrichi().equals(test.getNomEnrichi()) ){
     			System.out.println("Erreur non bloquante e2: compare NomMajuscule/NomEnrichi for commune "+commune.getCodeInsee()+" :"+commune.getNomMajuscule()+"|"+commune.getNomEnrichi()+" :"+test.getNomMajuscule()+"|"+test.getNomEnrichi());
-    		}
-    		//assertEquals("Mismatched TypeNomClair fr Commune " + commune.getCodeInsee(), commune.getTypeNomClair(), test.getTypeNomClair());
-    		if( !commune.getTypeNomClair().equals(test.getTypeNomClair()) ){
+    		}*/
+    		assertEquals("Mismatched TypeNomClair fr Commune " + commune.getCodeInsee(), commune.getTypeNomClair(), test.getTypeNomClair());
+    		/*if( !commune.getTypeNomClair().equals(test.getTypeNomClair()) ){
     			System.out.println("Erreur non bloquante e3: compare NomMajuscule/NomEnrichi for commune "+commune.getCodeInsee()+" : commune:"+commune.getTypeNomClair()+" test:"+test.getTypeNomClair());
-    		}
+    		}*/
     	}
     }
     int i=0;
@@ -251,15 +252,16 @@ public class TestHistoriqueCommuneImportBatch {
     		assertEquals("Mismatched CodeInsee", commune.getCodeInsee(), test.getCodeInsee());
     		assertEquals("Mismatched Departement", commune.getDepartement(), test.getDepartement());
     		assertEquals("Mismatched ArticleEnrichi", commune.getArticleEnrichi(), test.getArticleEnrichi());
-    		//assertEquals("Mismatched NomMajuscule", normalize(commune.getNomMajuscule()), normalize(test.getNomMajuscule()));
-    		//assertEquals("Mismatched NomEnrichi", normalize(commune.getNomEnrichi()), normalize(test.getNomEnrichi()));
-    		if( !commune.getNomMajuscule().equals(test.getNomMajuscule()) || !commune.getNomEnrichi().equals(test.getNomEnrichi()) ){
+    		assertEquals("Mismatched NomMajuscule", commune.getNomMajuscule(), test.getNomMajuscule());
+    		assertEquals("Mismatched NomEnrichi", commune.getNomEnrichi(), test.getNomEnrichi());
+    		// !!! Il existe des incohérences dans les fichiers INSEE, il est possible de remplacer les assert par des messages:
+    		/*if( !commune.getNomMajuscule().equals(test.getNomMajuscule()) || !commune.getNomEnrichi().equals(test.getNomEnrichi()) ){
     			System.out.println(new String("Erreur non bloquante e5: compare NomMajuscule/NomEnrichi for commune "+commune.getCodeInsee()+" :"+commune.getNomMajuscule()+"|"+commune.getNomEnrichi()+" :"+test.getNomMajuscule()+"|"+test.getNomEnrichi()));
-    		}
-    		//assertEquals("Mismatched TypeNomClair", commune.getTypeNomClair(), test.getTypeNomClair());
-    		if( !commune.getTypeNomClair().equals(test.getTypeNomClair()) ){
+    		}*/
+    		assertEquals("Mismatched TypeNomClair", commune.getTypeNomClair(), test.getTypeNomClair());
+    		/*if( !commune.getTypeNomClair().equals(test.getTypeNomClair()) ){
     			System.out.println("Erreur non bloquante e6: compare NomMajuscule/NomEnrichi for commune "+commune.getCodeInsee()+" : commune:"+commune.getTypeNomClair()+" test:"+test.getTypeNomClair());
-    		}
+    		}*/
     	}
     }
     assertEquals(fileList.size()+i, dbList.size()+h);
