@@ -72,7 +72,7 @@ import java.text.Normalizer;
  * Test the Commune Batch Import Job.
  * @author Marc Gimpel (mgimpel@gmail.com)
  */
-//@Ignore
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestHistoriqueCommuneImportBatch {
   /** Static Spring Configuration. */
