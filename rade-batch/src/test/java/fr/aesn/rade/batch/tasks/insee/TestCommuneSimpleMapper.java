@@ -45,12 +45,13 @@ import fr.aesn.rade.service.MetadataService;
 
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.core.io.ClassPathResource;
-
+import org.junit.Ignore;
 /**
  * JUnit Test for CommuneMapper.
  *
  * @author Marc Gimpel (mgimpel@gmail.com)
  */
+@Ignore
 public class TestCommuneSimpleMapper {
   /** Test line from the INSEE Departement file to import. */
   public static final String TEST_LINE =

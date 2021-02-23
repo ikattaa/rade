@@ -250,7 +250,7 @@ public class CommuneServiceImpl
   }
 
   /**
-   * Changes the name (MOD=100 : Changement de Nom) of the Commune with the
+   * Changes the name (MOD=10 : Changement de Nom) of the Commune with the
    * given CodeInsee effective as of the given Date.
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
@@ -263,7 +263,7 @@ public class CommuneServiceImpl
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod100ChangementdeNom(final Date dateEffective,
+  public Commune mod10ChangementdeNom(final Date dateEffective,
                                        final Audit audit,
                                        final String codeInsee,
                                        final String tnccoff,
@@ -276,11 +276,11 @@ public class CommuneServiceImpl
                              tnccoff,
                              nccoff,
                              commentaire,
-                             "100");
+                             "10");
   }
 
   /**
-   * Creates (MOD=200 : Creation) a new Commune with the given CodeInsee and
+   * Creates (MOD=20 : Creation) a new Commune with the given CodeInsee and
    * details, effective as of the given Date.
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
@@ -294,7 +294,7 @@ public class CommuneServiceImpl
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod200Creation(final Date dateEffective,
+  public Commune mod20Creation(final Date dateEffective,
                                 final Audit audit,
                                 final String codeInsee,
                                 final String departement,
@@ -309,26 +309,26 @@ public class CommuneServiceImpl
                          tnccoff,
                          nccoff,
                          commentaire,
-                         "200");
+                         "20");
   }
 
   /**
-   * Recreates (MOD=210 : Retablissement, MOD=230 : Commune se separant) the
+   * Recreates (MOD=21 : Retablissement, MOD=21 : Commune se separant) the
    * given Commune from the given source Commune, effective as of the given
    * Date.
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
-   * @param com210retabli the new Commune.
-   * @param com230source the source Commune.
+   * @param com21retabli the new Commune.
+   * @param com21source the source Commune.
    * @param commentaire comment for the genealogie link.
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
   @Override
   @Transactional(readOnly = false)
-  public void mod210x230Retablissement(final Date dateEffective,
+  public void mod21Retablissement(final Date dateEffective,
                                        final Audit audit,
-                                       final Commune com210retabli,
-                                       final Commune com230source,
+                                       final Commune com21retabli,
+                                       final Commune com21source,
                                        final String commentaire)
     throws InvalidArgumentException {
     // validate arguments
@@ -336,66 +336,56 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "The date and audit are mandatory.");
     }
-    if (com210retabli == null || com210retabli.getCodeInsee() == null
-            || com210retabli.getDepartement() == null
-            || com210retabli.getTypeNomClair() == null
-            || com210retabli.getNomEnrichi() == null) {
+    if (com21retabli == null || com21retabli.getCodeInsee() == null
+            || com21retabli.getDepartement() == null
+            || com21retabli.getTypeNomClair() == null
+            || com21retabli.getNomEnrichi() == null) {
       throw new InvalidArgumentException(
               "A mandatory detail for Commune retabli (210) was null.");
     }
-    if (com210retabli.getId() != null) {
+    if (com21retabli.getId() != null) {
       throw new InvalidArgumentException(
               "Commune rétabli has an ID already set.");
     }
-    if (!dateEffective.equals(com210retabli.getDebutValidite())) {
+    if (!dateEffective.equals(com21retabli.getDebutValidite())) {
       throw new InvalidArgumentException(
               "Commune rétabli is not valid from the give date.");
     }
-    Commune commune = communeJpaDao.findByCodeInseeValidOnDate(com210retabli.getCodeInsee(), dateEffective);
+    Commune commune = communeJpaDao.findByCodeInseeValidOnDate(com21retabli.getCodeInsee(), dateEffective);
     if ((commune != null)) {
+    	if(!com21retabli.getCodeInsee().equals(com21source.getCodeInsee())||(!com21source.getNomEnrichi().equals(commune.getNomEnrichi()))) {
+    	      throw new InvalidArgumentException(
+    	              "Commune rétabli already exists for the given date.");
+    	}
+    
+    }
+    if (com21source == null || com21source.getCodeInsee() == null
+            || com21source.getDepartement() == null
+            || com21source.getTypeNomClair() == null
+            || com21source.getNomEnrichi() == null) {
       throw new InvalidArgumentException(
-              "Commune rétabli already exists for the given date.");
+              "A mandatory Commune detail for Commune source (21) was null.");
     }
-    if (com230source == null || com230source.getCodeInsee() == null
-            || com230source.getDepartement() == null
-            || com230source.getTypeNomClair() == null
-            || com230source.getNomEnrichi() == null) {
-      throw new InvalidArgumentException(
-              "A mandatory Commune detail for Commune source (230) was null.");
-    }
-    log.info("Mod=210-230 (Retablissement) requested: date={}, code commune 210={}, code commune 230={}",
-             dateEffective, com210retabli.getCodeInsee(), com230source.getCodeInsee());
-    // update source commune (230).
-    Commune parentSource = invalidateCommune(com230source.getCodeInsee(), dateEffective);
-    com230source.setId(null);
-    com230source.setDebutValidite(dateEffective);
-    if (com230source.getNomMajuscule() == null) {
-      com230source.setNomMajuscule(StringConversionUtils.toUpperAsciiWithLookup(com230source.getNomEnrichi()));
-    }
-    if (com230source.getArticleEnrichi() == null) {
-      com230source.setArticleEnrichi(com230source.getTypeNomClair().getArticle());
-    }
-    if (com230source.getCommentaire() == null) {
-        com230source.setCommentaire("");
-    }
-    com230source.setAudit(audit);
-    Commune enfantSource = communeJpaDao.save(com230source);
-    buildGenealogie(parentSource, enfantSource, "230", commentaire);
+    log.info("Mod=21-21 (Retablissement) requested: date={}, code commune 21={}, code commune 21={}",
+             dateEffective, com21retabli.getCodeInsee(), com21source.getCodeInsee());
+    // update source commune (21).
+    Commune parentSource = invalidateCommune(com21source.getCodeInsee(), dateEffective);
+
     // create new commune retabli
-    com210retabli.setAudit(audit);
-    if (com210retabli.getNomMajuscule() == null) {
-      com210retabli.setNomMajuscule(StringConversionUtils.toUpperAsciiWithLookup(com210retabli.getNomEnrichi()));
+    com21retabli.setAudit(audit);
+    if (com21retabli.getNomMajuscule() == null) {
+      com21retabli.setNomMajuscule(StringConversionUtils.toUpperAsciiWithLookup(com21retabli.getNomEnrichi()));
     }
-    if (com210retabli.getArticleEnrichi() == null && com210retabli.getTypeNomClair().getArticleMaj() != null) {
-      com210retabli.setArticleEnrichi(com210retabli.getTypeNomClair().getArticle());
+    if (com21retabli.getArticleEnrichi() == null && com21retabli.getTypeNomClair().getArticleMaj() != null) {
+      com21retabli.setArticleEnrichi(com21retabli.getTypeNomClair().getArticle());
     }
-    Commune enfantRetabli = communeJpaDao.save(com210retabli);
+    Commune enfantRetabli = communeJpaDao.save(com21retabli);
     // add genealogie
-    buildGenealogie(parentSource, enfantRetabli, "210", commentaire);
+    buildGenealogie(parentSource, enfantRetabli, "21", commentaire);
   }
 
   /**
-   * Merges (MOD=310 : Fusion Commune absorbe, MOD=320 : Fusion Commune
+   * Merges (MOD=31 : Fusion Commune absorbe, MOD=32 : Fusion Commune
    * absorbante) the given Communes, effective as of the given Date.
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
@@ -406,18 +396,18 @@ public class CommuneServiceImpl
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod310x320Fusion(final Date dateEffective,
+  public Commune mod31x32Fusion(final Date dateEffective,
                                   final Audit audit,
-                                  final List<Commune> com310absorbe,
-                                  final Commune com320absorbant,
+                                  final List<Commune> com31absorbe,
+                                  final Commune com32absorbant,
                                   final String commentaire)
     throws InvalidArgumentException {
     return mergeCommunes(dateEffective,
                          audit,
-                         com310absorbe,
-                         com320absorbant,
+                         com31absorbe,
+                         com32absorbant,
                          commentaire,
-                         "320");
+                         "32");
   }
 
   /**
@@ -433,94 +423,43 @@ public class CommuneServiceImpl
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod330x340FusionAssociation(final Date dateEffective,
+  public Commune mod33x34FusionAssociation(final Date dateEffective,
                                              final Audit audit,
-                                             final List<Commune> com330associe,
-                                             final Commune com340absorbant,
+                                             final List<Commune> com33associe,
+                                             final Commune com34absorbant,
                                              final String commentaire)
     throws InvalidArgumentException {
     return mergeCommunes(dateEffective,
                          audit,
-                         com330associe,
-                         com340absorbant,
+                         com33associe,
+                         com34absorbant,
                          commentaire,
-                         "340");
+                         "34");
   }
 
-  /**
-   * Merges (MOD=311 : Commune nouvelle non deleguee, MOD=321 : Commune
-   * nouvelle sans deleguee) the given Communes, effective as of the given
-   * Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param com311 list of absorbed Commune.
-   * @param com321nouvelle the new/absorbing Commune.
-   * @param commentaire comment for the genealogie link.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  @Override
-  @Transactional(readOnly = false)
-  public Commune mod311x321FusionSansDeleguee(final Date dateEffective,
-                                              final Audit audit,
-                                              final List<Commune> com311,
-                                              final Commune com321nouvelle,
-                                              final String commentaire)
-    throws InvalidArgumentException {
-    return mergeCommunes(dateEffective,
-                         audit,
-                         com311,
-                         com321nouvelle,
-                         commentaire,
-                         "321");
-  }
 
   /**
-   * Merges (MOD=331,332,333,311,312 : Commune absorbe, MOD=341 : Commune
-   * nouvelle avec deleguee) the given Communes, effective as of the given
-   * Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param com331x332x333 list of absorbed Commune.
-   * @param com341nouvelle the new/absorbing Commune.
-   * @param commentaire comment for the genealogie link.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  @Override
-  @Transactional(readOnly = false)
-  public Commune mod331x332x333x341FusionAvecDeleguee(final Date dateEffective,
-                                                      final Audit audit,
-                                                      final List<Commune> com331x332x333,
-                                                      final Commune com341nouvelle,
-                                                      final String commentaire)
-    throws InvalidArgumentException {
-    return mergeCommunes(dateEffective,
-                         audit,
-                         com331x332x333,
-                         com341nouvelle,
-                         commentaire,
-                         "341");
-  }
-
-  /**
-   * Changes the departement (MOD=411 : Changement de departement) that the
-   * Commune belongs to (NB: this involves changing it's codeInsee).
+   * Changes the departement/code (MOD=41 : Changement de departement,
+   * MOD=50 : Changement de code) 
    * @param dateEffective the date that the change takes effect.
    * @param audit audit details about change.
    * @param codeInsee the new code of the Commune.
    * @param departement the new departement to which the Commune belongs.
    * @param oldCodeInsee the old code for the Commune.
    * @param commentaire comment for the genealogie link.
+   * @param mod modification code.
    * @return the new Commune.
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
   @Override
   @Transactional(readOnly = false)
-  public Commune mod411ChangementDept(final Date dateEffective,
+  public Commune mod41x50ChangementCodeCom(final Date dateEffective,
                                       final Audit audit,
                                       final String codeInsee,
                                       final String departement,
                                       final String oldCodeInsee,
-                                      final String commentaire)
+                                      final String commentaire,
+                                      final String mod)
     throws InvalidArgumentException {
     // validate arguments
     if (dateEffective == null || audit == null) {
@@ -535,7 +474,7 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "There is already a Commune with the given codeInsee valid at the dateEffective");
     }
-    log.info("Mod=411 (Changement de Departement) requested: date={}, new code commune={}, old code commune={}",
+    log.info("Mod=41 (Changement de Departement)/Mod=50 (Changement de code) requested: date={}, new code commune={}, old code commune={}",
              dateEffective, codeInsee, oldCodeInsee);
     // invalidate old commune
     Commune parent = invalidateCommune(oldCodeInsee, dateEffective);
@@ -550,101 +489,8 @@ public class CommuneServiceImpl
     newCommune.setAudit(audit);
     Commune enfant = communeJpaDao.save(newCommune);
     // add genealogie
-    buildGenealogie(parent, enfant, "411", commentaire);
+    buildGenealogie(parent, enfant, mod, commentaire);
     return getCommuneById(enfant.getId());
-  }
-
-  /**
-   * Changes the name (MOD=X10 : Changement d'orthographe) of the Commune with
-   * the given CodeInsee effective as of the given Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param codeInsee the code of Commune to change.
-   * @param tnccoff the type of the official new name.
-   * @param nccoff the official new name.
-   * @param commentaire comment for the genealogie link.
-   * @return the new Commune.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  @Override
-  @Transactional(readOnly = false)
-  public Commune modX10ChangementdeNom(final Date dateEffective,
-                                       final Audit audit,
-                                       final String codeInsee,
-                                       final String tnccoff,
-                                       final String nccoff,
-                                       final String commentaire)
-    throws InvalidArgumentException {
-    return changeCommuneName(dateEffective,
-                             audit,
-                             codeInsee,
-                             tnccoff,
-                             nccoff,
-                             commentaire,
-                             "X10");
-  }
-
-  /**
-   * Creates (MOD=X20 : Creation) a new Commune with the given CodeInsee and
-   * details, effective as of the given Date.
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param codeInsee the code of the new Commune.
-   * @param departement the departement to which the new Commune belongs.
-   * @param tnccoff the type of the official name.
-   * @param nccoff the official name.
-   * @param commentaire comment for the new Commune.
-   * @return the new Commune.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  @Override
-  @Transactional(readOnly = false)
-  public Commune modX20Creation(final Date dateEffective,
-                                final Audit audit,
-                                final String codeInsee,
-                                final String departement,
-                                final String tnccoff,
-                                final String nccoff,
-                                final String commentaire)
-    throws InvalidArgumentException {
-    return createCommune(dateEffective,
-                         audit,
-                         codeInsee,
-                         departement,
-                         tnccoff,
-                         nccoff,
-                         commentaire,
-                         "X20");
-  }
-
-  /**
-   * Removes the Commune (MOD=X30 : Suppression).
-   * @param dateEffective the date that the change takes effect.
-   * @param audit audit details about change.
-   * @param codeInsee the code of the Commune to remove.
-   * @param commentaire comment.
-   * @return the invalidated commune.
-   * @throws InvalidArgumentException if an invalid argument has been passed.
-   */
-  public Commune modX30Suppression(Date dateEffective, Audit audit,
-                                   String codeInsee, String commentaire)
-    throws InvalidArgumentException {
-    // validate arguments
-    if (dateEffective == null || audit == null) {
-      throw new InvalidArgumentException("The date and audit are mandatory.");
-    }
-    if (codeInsee == null) {
-      throw new InvalidArgumentException("The codeInsee is mandatory.");
-    }
-    Commune commune = getCommuneByCode(codeInsee, dateEffective);
-    if ((commune == null)) {
-      throw new InvalidArgumentException(
-              "There is no Commune with the given codeInsee valid at the dateEffective");
-    }
-    log.info("Mod=XXX (Suppression) requested: date={}, code commune={}",
-             dateEffective, codeInsee);
-    // invalidate old commune
-    return invalidateCommune(codeInsee, dateEffective);
   }
 
   /**
@@ -788,6 +634,7 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "Commune absorbé list cannot be null or empty.");
     }
+    
     if (comAbsorbant == null || comAbsorbant.getCodeInsee() == null
             || comAbsorbant.getDepartement() == null
             || comAbsorbant.getTypeNomClair() == null
@@ -803,11 +650,10 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "Commune absorbant is not valid from the give date.");
     }
-    log.info("Mod={} ({}) requested: commune={}, date={}",
-             mod,
-             metadataService.getTypeGenealogieEntiteAdmin(mod).getLibelleCourt(),
+ 
+   log.info("Mod={} ({}) requested: commune={}, date={}", mod, metadataService.getTypeGenealogieEntiteAdmin(mod).getLibelleCourt(),
              comAbsorbant.getCodeInsee(), dateEffective);
-    // create new Commune absorbant
+    // create new Commune absorbant close de la commune
     Commune parentAbsorbant = invalidateCommune(comAbsorbant.getCodeInsee(), dateEffective);
     comAbsorbant.setAudit(audit);
     if (comAbsorbant.getNomMajuscule() == null) {
@@ -817,6 +663,7 @@ public class CommuneServiceImpl
             && comAbsorbant.getTypeNomClair().getArticleMaj() != null) {
       comAbsorbant.setArticleEnrichi(comAbsorbant.getTypeNomClair().getArticle());
     }
+    // creation de la nouvelle commune
     Commune enfantAbsorbant = communeJpaDao.save(comAbsorbant);
     buildGenealogie(parentAbsorbant, enfantAbsorbant, mod, commentaire);
     Commune parentAbsorbe;
@@ -973,23 +820,37 @@ public class CommuneServiceImpl
       throw new InvalidArgumentException(
               "The codeInsee and date are mandatory.");
     }
-    Commune commune = communeJpaDao.findByCodeInseeValidOnDate(codeInsee, dateEffective);
-    if ((commune == null)) {
+    
+    Commune communeinvalide= communeJpaDao.findByCodeInseeInvalidOnDate(codeInsee, dateEffective);
+    Commune commune = communeJpaDao.findByCodeInseeValidBeforeDate(codeInsee, dateEffective);
+    if(commune==null) 
+    {commune = communeJpaDao.findByCodeInseeValidOnDate(codeInsee, dateEffective);
+    		}
+    if (commune == null && communeinvalide==null) {
       throw new InvalidArgumentException(
               "There is no Commune with the given codeInsee (" + codeInsee
               + ") valid at the dateEffective ("+ dateEffective + ")");
     }
-    if (commune.getFinValidite() != null) {
-      throw new InvalidArgumentException(
-              "The Commune has already been invalidated");
+    
+    if(communeinvalide!=null) {
+    	return communeinvalide;
     }
-    if (commune.getDebutValidite() != null
-            && commune.getDebutValidite().after(dateEffective)) {
-      throw new InvalidArgumentException(
-              "The Commune is invalidated before first valid: "
-              + commune.getDebutValidite());
+    
+    if(commune!=null) {
+    	if (commune.getFinValidite() != null && communeinvalide==null) {
+    		throw new InvalidArgumentException(
+    				"The Commune has already been invalidated");
+    	}
+    	if (commune.getDebutValidite() != null
+    			&& commune.getDebutValidite().after(dateEffective) && communeinvalide==null) {
+    		throw new InvalidArgumentException(
+    				"The Commune is invalidated before first valid: "
+    						+ commune.getDebutValidite());
+    	}
+
+    	commune.setFinValidite(dateEffective);
     }
-    commune.setFinValidite(dateEffective);
+
     return communeJpaDao.save(commune);
   }
 

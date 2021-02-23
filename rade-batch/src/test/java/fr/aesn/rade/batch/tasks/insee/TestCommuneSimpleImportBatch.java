@@ -49,11 +49,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import fr.aesn.rade.batch.tasks.SpringBatchTestConfiguration;
 import fr.aesn.rade.persist.dao.CommuneJpaDao;
 import fr.aesn.rade.persist.model.Commune;
-
+import org.junit.Ignore;
 /**
  * Test the Commune Batch Import Job.
  * @author Marc Gimpel (mgimpel@gmail.com)
  */
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestCommuneSimpleImportBatch {
   /** Static Spring Configuration. */

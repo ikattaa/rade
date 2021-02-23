@@ -49,11 +49,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import fr.aesn.rade.batch.tasks.SpringBatchTestConfiguration;
 import fr.aesn.rade.persist.dao.DepartementJpaDao;
 import fr.aesn.rade.persist.model.Departement;
-
+import org.junit.Ignore;
 /**
  * Test the Departement Batch Import Job.
  * @author Marc Gimpel (mgimpel@gmail.com)
  */
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestDepartementImportBatch {
   /** Static Spring Configuration. */

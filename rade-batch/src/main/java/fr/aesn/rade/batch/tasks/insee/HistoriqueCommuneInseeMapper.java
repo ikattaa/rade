@@ -79,29 +79,21 @@ public class HistoriqueCommuneInseeMapper
     throws BindException {
     log.trace("Importing line: {}", fieldSet.toString());
     HistoriqueCommuneInseeModel historique = new HistoriqueCommuneInseeModel();
-    historique.setCodeDepartement(fieldSet.readString(0));
-    historique.setCodeArrondissement(fieldSet.readString(1));
-    historique.setCodeCanton(fieldSet.readString(2));
-    historique.setCodeCommune(fieldSet.readString(3));
-    historique.setTexteLegislative(fieldSet.readString(4));
-    historique.setDateJO(buildDateJoList(fieldSet.readString(5)));
-    historique.setDateEffet(fieldSet.readDate(6, "dd-MM-yyyy"));
-    historique.setDatePlusRecente(fieldSet.readDate(7, "dd-MM-yyyy"));
-    historique.setTypeModification(fieldSet.readString(8));
-    historique.setChefLieu(fieldSet.readString(9));
-    historique.setAncienChefLieu(fieldSet.readString(10));
-    historique.setNombreCommunes(fieldSet.readString(11).length() != 0 ? fieldSet.readInt(11) : null);
-    historique.setRangCommunes(fieldSet.readString(12).length() != 0 ? fieldSet.readInt(12) : null);
-    historique.setCommuneEchange(fieldSet.readString(13));
-    historique.setPopulationCommuneEchange(fieldSet.readString(14).length() != 0 ? fieldSet.readInt(14) : null);
-    historique.setSurfaceCommuneEchange(fieldSet.readString(15).length() != 0 ? fieldSet.readInt(15) : null);
-    historique.setAncienCommuneChgmtDept(fieldSet.readString(16));
-    historique.setAncienArrondissement(fieldSet.readString(17));
-    historique.setAncienCanton(fieldSet.readString(18));
-    historique.setTypeNomClair(fieldSet.readString(19));
-    historique.setNomOfficiel(fieldSet.readString(20));
-    historique.setAncienTypeNomClair(fieldSet.readString(21));
-    historique.setAncienNom(fieldSet.readString(22));
+    historique.setTypeEvenCommune(fieldSet.readString(0));
+    historique.setDateEffet(fieldSet.readDate(1, "dd/MM/yy"));
+    historique.setTypeCommuneAvantEven(fieldSet.readString(2));
+    historique.setCodeCommuneAvantEven(fieldSet.readString(3));
+    historique.setTypeNomClairAv(fieldSet.readString(4));
+    historique.setNomClairMajAv(fieldSet.readString(5));
+    historique.setNomClairTypographieRicheAv(fieldSet.readString(6));
+    historique.setNomClairTypographieRicheAvecArticleAv(fieldSet.readString(7));
+    historique.setTypeCommuneAprEven(fieldSet.readString(8));
+    historique.setCodeCommuneaprEven(fieldSet.readString(9));
+    historique.setTypeNomClairAp(fieldSet.readString(10));
+    historique.setNomClairMajAp(fieldSet.readString(11));
+    historique.setNomClairTypographieRicheAp(fieldSet.readString(12));
+    historique.setNomClairTypographieRicheAvecArticleAp(fieldSet.readString(13));
+   
     return historique;
   }
 

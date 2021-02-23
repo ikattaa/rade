@@ -48,11 +48,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import fr.aesn.rade.batch.tasks.SpringBatchTestConfiguration;
 import fr.aesn.rade.persist.dao.HexaposteJpaDao;
 import fr.aesn.rade.persist.model.Hexaposte;
-
+import org.junit.Ignore;
 /**
  * Test the Hexaposte Batch Import Job.
  * @author Marc Gimpel (mgimpel@gmail.com)
  */
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestHexaposteImportBatch {
   /** Static Spring Configuration. */

@@ -74,7 +74,7 @@ public class ZipTasklet
                               ChunkContext chunkContext) {
     Resource resource = new DefaultResourceLoader().getResource(destfile);
     try (ZipOutputStream zop = new ZipOutputStream(new FileOutputStream(resource.getFile()))) {
-      ZipEntry entry = new ZipEntry("file.csv"); //TODO
+      ZipEntry entry = new ZipEntry("file.csv");
       zop.putNextEntry(entry);
       zop.close();
     } catch (Exception e) {

@@ -44,7 +44,7 @@
         </property>
         <property name="lineTokenizer">
           <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer"
-                p:delimiter="&#9;"/> <!-- &#9; for TAB (ASCII code 09) -->
+                p:delimiter="&#9;"/> &#9; <!-- for TAB (ASCII code 09)-->
         </property>
       </bean>
     </property>
@@ -63,7 +63,7 @@
         </property>
         <property name="lineTokenizer">
           <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer"
-                p:delimiter="&#9;"/> <!-- &#9; for TAB (ASCII code 09) -->
+                p:delimiter="&#9;"/> &#9; <!-- for TAB (ASCII code 09)-->
         </property>
       </bean>
     </property>
@@ -82,7 +82,8 @@
         </property>
         <property name="lineTokenizer">
           <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer"
-                p:delimiter="&#9;"/> <!-- &#9; for TAB (ASCII code 09) -->
+                p:delimiter="&#9;"/> &#9; <!--for TAB (ASCII code 09)-->
+
         </property>
       </bean>
     </property>
@@ -92,13 +93,15 @@
   <bean id="historiqueCommuneItemReader" scope="step"
         class="org.springframework.batch.item.file.FlatFileItemReader">
     <property name="resource" value="#{jobParameters['inputFile']}"/>
-    <property name="encoding" value="windows-1252"/>
+    <property name="encoding" value="UTF-8"/>
     <property name="linesToSkip" value="1"/>
     <property name="lineMapper">
       <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
         <property name="lineTokenizer">
-          <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer"
-                p:delimiter="&#9;"/> <!-- &#9; for TAB (ASCII code 09) -->
+          <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+            <property name="quoteCharacter" value="&quot;" />
+            <property name="delimiter" value="," />
+            </bean>
         </property>
         <property name="fieldSetMapper">
           <bean class="fr.aesn.rade.batch.tasks.insee.HistoriqueCommuneInseeMapper"/>
