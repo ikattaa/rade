@@ -27,7 +27,13 @@
 				<form name="batchForm" action="${pageContext.request.contextPath}${postpath}" method="post" enctype="multipart/form-data">
 					<table class="w-100">
 						<tr>
+								<td><label for="debutValidite"><spring:message code='batchrequest.label.date'/>:</label></td>
+								<td><input type="date" name="debutValidite" onclick="document.getElementById('debutValidite').value='';"/></td>
+						</tr>
+						<tr>
+
 							<td class="w-25"><label for="file"><spring:message code='batchrequest.label.file'/>:</label></td>
+
 							<td><label class="btn btn-aesn"><spring:message code='batchrequest.button.browse'/><input type="file" name="file" onchange="$('#filename').html(this.files[0].name)" hidden></label>
 								<span class="label label-info" id="filename"></span>
 							</td>
