@@ -74,11 +74,11 @@ INSERT INTO ZR_TYPEGENEALOGIE("CODE", "LIBELLE_COURT", "LIBELLE_LONG", "STATUT_D
 INSERT INTO ZR_TYPEGENEALOGIE("CODE", "LIBELLE_COURT", "LIBELLE_LONG", "STATUT_DEFAUT") VALUES ('10','Changement de nom','Changement de nom','I');
 INSERT INTO ZR_TYPEGENEALOGIE("CODE", "LIBELLE_COURT", "LIBELLE_LONG", "STATUT_DEFAUT") VALUES ('20','Création','Création','I');
 INSERT INTO ZR_TYPEGENEALOGIE("CODE", "LIBELLE_COURT", "LIBELLE_LONG", "STATUT_DEFAUT") VALUES ('21','Rétablissement','Rétablissement','I')	;
-INSERT INTO ZR_TYPEGENEALOGIE("CODE", "LIBELLE_COURT", "LIBELLE_LONG", "STATUT_DEFAUT") VALUES ('30','Suppression','Suppression','I');
+INSERT INTO ZR_TYPEGENEALOGIE("CODE", "LIBELLE_COURT", "LIBELLE_LONG", "STATUT_DEFAUT") VALUES ('30','Suppression','Suppression','N');
 INSERT INTO ZR_TYPEGENEALOGIE("CODE","LIBELLE_COURT","LIBELLE_LONG","STATUT_DEFAUT" ) VALUES ('31','Fusion','Fusion simple','I');
 INSERT INTO ZR_TYPEGENEALOGIE("CODE","LIBELLE_COURT","LIBELLE_LONG","STATUT_DEFAUT") VALUES ('32','Fusion','Création de commune nouvelle','I' );
 INSERT INTO ZR_TYPEGENEALOGIE("CODE","LIBELLE_COURT","LIBELLE_LONG","STATUT_DEFAUT" ) VALUES ('33','Fusion','Fusion association','I');
-INSERT INTO ZR_TYPEGENEALOGIE("CODE","LIBELLE_COURT","LIBELLE_LONG","STATUT_DEFAUT") VALUES ('34','Fusion','Transformation de fusion association en fusion simple','I');
+INSERT INTO ZR_TYPEGENEALOGIE("CODE","LIBELLE_COURT","LIBELLE_LONG","STATUT_DEFAUT") VALUES ('34','Fusion','Transformation de fusion association en fusion simple','N');
 INSERT INTO ZR_TYPEGENEALOGIE("CODE","LIBELLE_COURT","LIBELLE_LONG","STATUT_DEFAUT") VALUES ('41','Changement de dept.','Changement de code dû à un changement de département','I');
 INSERT INTO ZR_TYPEGENEALOGIE("CODE","LIBELLE_COURT","LIBELLE_LONG","STATUT_DEFAUT") VALUES ('50','Transfert chef-lieu','Changement de code dû à un transfert de chef-lieu','I');
-INSERT INTO ZR_TYPEGENEALOGIE("CODE","LIBELLE_COURT","LIBELLE_LONG","STATUT_DEFAUT") VALUES ('70','Changement de code','Transformation de commune associé en commune déléguée','I');
+INSERT INTO ZR_TYPEGENEALOGIE("CODE","LIBELLE_COURT","LIBELLE_LONG","STATUT_DEFAUT") VALUES ('70','Changement de code','Transformation de commune associé en commune déléguée','N');
