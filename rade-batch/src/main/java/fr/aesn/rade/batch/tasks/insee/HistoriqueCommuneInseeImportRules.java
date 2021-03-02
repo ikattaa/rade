@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+import java.util.*; 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -209,6 +209,8 @@ public class HistoriqueCommuneInseeImportRules {
       throw new InvalidArgumentException("The Start Date must be before the End Date.");
     }
     log.debug("Processing all MODs, between {} and {}", start, end);
+    
+    
     processAllMod(filterListByDate(list, start, end));
   }
 
@@ -225,7 +227,8 @@ public class HistoriqueCommuneInseeImportRules {
     List<Date> dates =
       HistoriqueCommuneInseeImportRules.buildDistinctSortedDateList(list);
     for (Date date : dates) {
-      processAllMod(list, date);
+    	//Collections.reverse(list);
+    	processAllMod(list, date);
     }
   }
 
@@ -268,6 +271,7 @@ public class HistoriqueCommuneInseeImportRules {
                                            historique.getCodeCommuneaprEven(),
                                            historique.getTypeNomClairAp(),
                                            historique.getNomClairTypographieRicheAp(),
+                                           historique.getNomClairMajAp(),
                                            "");
     }
   }
@@ -285,6 +289,7 @@ public class HistoriqueCommuneInseeImportRules {
                                     historique.getCodeCommuneaprEven().substring(0, 2),
                                     historique.getTypeNomClairAp(),
                                     historique.getNomClairTypographieRicheAp(),
+                                    historique.getNomClairMajAp(),
                                     "");
     }
   }
@@ -338,13 +343,15 @@ public class HistoriqueCommuneInseeImportRules {
 
   public void processMod33x34(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
-    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "33", "34"), "33","34");
+   // List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "33", "34"), "33","34");
+    List<HistoriqueCommuneInseeModel.Changeset> setList = buildModSet(buildModFilteredPairList(fullList, "33", "33"), "33","33");
     log.debug("Processing MOD 33 & 34, # of sets: {}", setList.size());
     for (HistoriqueCommuneInseeModel.Changeset set : setList) {
       log.trace("Processing set: {}", set);
       assert set.isValid();
       for(HistoriqueCommuneInseeModel.Pair pair : set.getPairs()) {
-        assert "34".equals(pair.getParent().getTypeEvenCommune())||"33".equals(pair.getEnfant().getTypeEvenCommune()) : pair.getEnfant().getTypeEvenCommune();
+       // assert "34".equals(pair.getParent().getTypeEvenCommune())
+    	  assert "33".equals(pair.getEnfant().getTypeEvenCommune()) : pair.getEnfant().getTypeEvenCommune();
       }
       List<Commune> com33associe = buildCommuneList(buildEnfantList(set));
       Commune com34absorbant = buildCommuneEnfant(set.getPairs().get(0).getParent());
@@ -359,6 +366,7 @@ public class HistoriqueCommuneInseeImportRules {
                                                  com33associe,
                                                  com34absorbant,
                                                  null);
+      
     }
   }
 
@@ -376,6 +384,7 @@ public class HistoriqueCommuneInseeImportRules {
                                           historique.getCodeCommuneaprEven(),
                                           historique.getCodeCommuneaprEven().substring(0,2),
                                           historique.getCodeCommuneAvantEven(),
+                                          historique.getNomClairMajAp(),
                                           null,
                                           "41");
     }
@@ -389,6 +398,7 @@ public class HistoriqueCommuneInseeImportRules {
                                           historique.getCodeCommuneaprEven(),
                                           historique.getCodeCommuneaprEven().substring(0,2),
                                           historique.getCodeCommuneAvantEven(),
+                                          historique.getNomClairMajAv(),
                                           null,
                                           "50");
     }
@@ -422,7 +432,7 @@ public class HistoriqueCommuneInseeImportRules {
 	    commune.setDepartement(historique.getCodeCommuneaprEven().substring(0, 2));
 	    commune.setTypeNomClair(metadataService.getTypeNomClair(historique.getTypeNomClairAp()));
 	    commune.setNomEnrichi(historique.getNomClairTypographieRicheAp());
-	    commune.setNomMajuscule(StringConversionUtils.toUpperAsciiWithLookup(historique.getNomClairTypographieRicheAp()));
+	    commune.setNomMajuscule(historique.getNomClairMajAp());
 	    commune.setArticleEnrichi(this.getArticleByTncc(historique.getTypeNomClairAp()));
 	    return commune;
 	  }

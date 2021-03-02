@@ -60,7 +60,7 @@ public class CommuneDisplayModel {
   public CommuneDisplayModel(final CommunePlusWithGenealogie communePlusWithGenealogie) {
     CommunePlus commune = communePlusWithGenealogie.getCommunePlus();
     this.codeInsee = commune.getCodeInsee();
-    this.nomMajuscule = commune.getNomMajuscule();
+   this.nomMajuscule = commune.getNomMajuscule();
     this.nomEnrichi = commune.getNomEnrichi();
     this.debutValidite = commune.getDebutValiditeCommuneInsee();
     this.finValidite = commune.getFinValiditeCommuneInsee();

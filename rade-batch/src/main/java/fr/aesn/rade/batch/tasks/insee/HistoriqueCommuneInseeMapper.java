@@ -80,7 +80,7 @@ public class HistoriqueCommuneInseeMapper
     log.trace("Importing line: {}", fieldSet.toString());
     HistoriqueCommuneInseeModel historique = new HistoriqueCommuneInseeModel();
     historique.setTypeEvenCommune(fieldSet.readString(0));
-    //historique.setDateEffet(fieldSet.readDate(1, "dd/MM/yy"));
+   //historique.setDateEffet(fieldSet.readDate(1, "dd/MM/yy"));
     historique.setDateEffet(fieldSet.readDate(1, "yyyy-MM-dd"));
     historique.setTypeCommuneAvantEven(fieldSet.readString(2));
     historique.setCodeCommuneAvantEven(fieldSet.readString(3));
@@ -94,7 +94,7 @@ public class HistoriqueCommuneInseeMapper
     historique.setNomClairMajAp(fieldSet.readString(11));
     historique.setNomClairTypographieRicheAp(fieldSet.readString(12));
     historique.setNomClairTypographieRicheAvecArticleAp(fieldSet.readString(13));
-   
+    
     return historique;
   }
 

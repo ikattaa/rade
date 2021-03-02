@@ -268,6 +268,7 @@ public class CommuneServiceImpl
                                        final String codeInsee,
                                        final String tnccoff,
                                        final String nccoff,
+                                       final String nomMajuscule,
                                        final String commentaire)
     throws InvalidArgumentException {
     return changeCommuneName(dateEffective,
@@ -275,6 +276,7 @@ public class CommuneServiceImpl
                              codeInsee,
                              tnccoff,
                              nccoff,
+                             nomMajuscule,
                              commentaire,
                              "10");
   }
@@ -300,6 +302,7 @@ public class CommuneServiceImpl
                                 final String departement,
                                 final String tnccoff,
                                 final String nccoff,
+                                final String nomMajuscule,
                                 final String commentaire)
     throws InvalidArgumentException {
     return createCommune(dateEffective,
@@ -308,6 +311,7 @@ public class CommuneServiceImpl
                          departement,
                          tnccoff,
                          nccoff,
+                         nomMajuscule,
                          commentaire,
                          "20");
   }
@@ -354,6 +358,7 @@ public class CommuneServiceImpl
     Commune commune = communeJpaDao.findByCodeInseeValidOnDate(com21retabli.getCodeInsee(), dateEffective);
     if ((commune != null)) {
     	if(!com21retabli.getCodeInsee().equals(com21source.getCodeInsee())||(!com21source.getNomEnrichi().equals(commune.getNomEnrichi()))) {
+    		log.error(" commune :"+commune.getCodeInsee() +"nom :"+commune.getNomEnrichi());
     	      throw new InvalidArgumentException(
     	              "Commune rétabli already exists for the given date.");
     	}
@@ -458,6 +463,7 @@ public class CommuneServiceImpl
                                       final String codeInsee,
                                       final String departement,
                                       final String oldCodeInsee,
+                                      final String nomMajuscule,
                                       final String commentaire,
                                       final String mod)
     throws InvalidArgumentException {
@@ -511,8 +517,10 @@ public class CommuneServiceImpl
                                     final String codeInsee,
                                     final String tnccoff,
                                     final String nccoff,
+                                    final String nomMajuscule,
                                     final String commentaire,
                                     final String mod)
+  
     throws InvalidArgumentException {
     // validate arguments
     if (mod == null) {
@@ -540,8 +548,9 @@ public class CommuneServiceImpl
                                       dateEffective,
                                       tnccoff,
                                       nccoff,
-                                      null,
+                                      nomMajuscule,
                                       null);
+ 
     newCommune.setAudit(audit);
     Commune enfant = communeJpaDao.save(newCommune);
     // add genealogie
@@ -569,6 +578,7 @@ public class CommuneServiceImpl
                                 final String departement,
                                 final String tnccoff,
                                 final String nccoff,
+                                final String nomMajuscule,
                                 final String commentaire,
                                 final String mod)
     throws InvalidArgumentException {
@@ -601,10 +611,11 @@ public class CommuneServiceImpl
                                       dateEffective,
                                       tnccoff,
                                       nccoff,
-                                      null,
+                                      nomMajuscule,
                                       commentaire);
     newCommune.setAudit(audit);
     return communeJpaDao.save(newCommune);
+    
   }
 
   /**
@@ -651,7 +662,7 @@ public class CommuneServiceImpl
               "Commune absorbant is not valid from the give date.");
     }
  
-   log.info("Mod={} ({}) requested: commune={}, date={}", mod, metadataService.getTypeGenealogieEntiteAdmin(mod).getLibelleCourt(),
+  log.info("Mod={} ({}) requested: commune={}, date={}", mod, metadataService.getTypeGenealogieEntiteAdmin(mod).getLibelleCourt(),
              comAbsorbant.getCodeInsee(), dateEffective);
     // create new Commune absorbant close de la commune
     Commune parentAbsorbant = invalidateCommune(comAbsorbant.getCodeInsee(), dateEffective);
@@ -804,6 +815,7 @@ public class CommuneServiceImpl
                                                  : nomMajuscule);
     commune.setCommentaire(commentaire == null ? ""
                                                : commentaire);
+    
     return commune;
   }
 

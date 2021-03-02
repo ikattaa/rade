@@ -126,7 +126,7 @@ public interface CommuneService {
    * @throws InvalidArgumentException if an invalid argument has been passed.
    */
   public Commune mod10ChangementdeNom(Date dateEffective, Audit audit,
-                                       String codeInsee, String tnccoff,
+                                       String codeInsee, String tnccoff,String nomMajuscule,
                                        String nccoff, String commentaire)
     throws InvalidArgumentException;
 
@@ -145,7 +145,7 @@ public interface CommuneService {
    */
   public Commune mod20Creation(Date dateEffective, Audit audit,
                                 String codeInsee, String departement,
-                                String tnccoff, String nccoff,
+                                String tnccoff, String nccoff,String nomMajuscule,
                                 String commentaire)
     throws InvalidArgumentException;
 
@@ -214,7 +214,7 @@ public interface CommuneService {
    */
   public Commune mod41x50ChangementCodeCom(Date dateEffective, Audit audit,
                                       String codeInsee, String departement,
-                                      String oldCodeInsee, String commentaire, String mod)
+                                      String oldCodeInsee,String nomMajuscule, String commentaire, String mod)
     throws InvalidArgumentException;
 
 
