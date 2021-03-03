@@ -48,7 +48,7 @@ import org.springframework.core.io.ClassPathResource;
 public class TestHistoriqueCommuneInseeMapper {
   /** Test line from the INSEE Commune history file to import. */
   public static final String TEST_LINE =
-  "32,01/01/19,COM,01033,0,BELLEGARDE SUR VALSERINE,Bellegarde-sur-Valserine,Bellegarde-sur-Valserine,COM,01033,0,VALSERHONE,Valserhône,Valserhône";
+  "32,2019-01-01,COM,01033,0,BELLEGARDE SUR VALSERINE,Bellegarde-sur-Valserine,Bellegarde-sur-Valserine,COM,01033,0,VALSERHONE,Valserhône,Valserhône";
 
   /**
    * Test mapping one line from the Commune History file to import.
@@ -57,14 +57,16 @@ public class TestHistoriqueCommuneInseeMapper {
    */
   @Test
   public void testMapping() throws ParseException, BindException {
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+    //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
     tokenizer.setDelimiter(",");
     FieldSet fieldSet = tokenizer.tokenize(TEST_LINE);
     HistoriqueCommuneInseeMapper mapper = new HistoriqueCommuneInseeMapper();
     HistoriqueCommuneInseeModel historique = mapper.mapFieldSet(fieldSet);
     assertEquals("Entity doesn't match expected value","32", historique.getTypeEvenCommune());
-    assertEquals("Entity doesn't match expected value",sdf.parse("01/01/19"), historique.getDateEffet());
+    assertEquals("Entity doesn't match expected value",sdf.parse("2019-01-01"), historique.getDateEffet());
+    //assertEquals("Entity doesn't match expected value",sdf.parse("2019-01-01"), historique.getDateEffet());
     assertEquals("Entity doesn't match expected value","COM", historique.getTypeCommuneAvantEven());
     assertEquals("Entity doesn't match expected value","01033", historique.getCodeCommuneAvantEven());
     assertEquals("Entity doesn't match expected value","0", historique.getTypeNomClairAv());
@@ -88,7 +90,7 @@ public class TestHistoriqueCommuneInseeMapper {
   public void testMappingFile() throws Exception {
     // Configure and open ItemReader (reading test input file)
     FlatFileItemReader<HistoriqueCommuneInseeModel> reader = new FlatFileItemReader<>();
-    reader.setResource(new ClassPathResource("batchfiles/insee/historiq2020.csv"));
+    reader.setResource(new ClassPathResource("batchfiles/insee/mvtcommune2021-modified.csv"));
     reader.setLinesToSkip(1);
     DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
     tokenizer.setDelimiter(",");
@@ -112,7 +114,7 @@ public class TestHistoriqueCommuneInseeMapper {
     }
     // Check all records from input file have been read
     assertNull(record);
-    assertEquals("Didn't read all the file", 13156, records.size());
+    assertEquals("Didn't read all the file", 13419, records.size());
     
   }
 }
