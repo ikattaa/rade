@@ -253,6 +253,7 @@ public class HistoriqueCommuneInseeImportRules {
     processMod41x50(dateFilteredList); // 411 before 3xx
     processMod20(dateFilteredList);
     processMod21(dateFilteredList);
+    processMod30(dateFilteredList);
     processMod31x32(dateFilteredList);
     processMod33x34(dateFilteredList);
     
@@ -286,7 +287,7 @@ public class HistoriqueCommuneInseeImportRules {
       communeService.mod20Creation(historique.getDateEffet(),
                                     batchAudit,
                                     historique.getCodeCommuneaprEven(),
-                                    historique.getCodeCommuneaprEven().substring(0, 2),
+                                    historique.getDepartementAprEven(),
                                     historique.getTypeNomClairAp(),
                                     historique.getNomClairTypographieRicheAp(),
                                     historique.getNomClairMajAp(),
@@ -312,6 +313,19 @@ public class HistoriqueCommuneInseeImportRules {
                                               null);
     }
   }
+
+  public void processMod30(final List<HistoriqueCommuneInseeModel> fullList)
+      throws InvalidArgumentException {
+      List<HistoriqueCommuneInseeModel> list = buildModFilteredList(fullList, "30");
+      log.debug("Processing MOD 30, # of elements: {}", list.size());
+      for (HistoriqueCommuneInseeModel historique : list) {
+        log.trace("Processing elements: {}", historique);
+        assert "30".equals(historique.getTypeEvenCommune()) : historique.getTypeEvenCommune();
+        communeService.mod30Supression(historique.getDateEffet(),
+                                             batchAudit,
+                                             historique.getCodeCommuneAvantEven());
+      }
+    }
 
   public void processMod31x32(final List<HistoriqueCommuneInseeModel> fullList)
     throws InvalidArgumentException {
@@ -411,7 +425,7 @@ public class HistoriqueCommuneInseeImportRules {
 		    commune.setTypeEntiteAdmin(metadataService.getTypeEntiteAdmin("COM"));
 		    commune.setDebutValidite(historique.getDateEffet());
 		    commune.setCodeInsee(historique.getCodeCommuneAvantEven());
-		    commune.setDepartement(historique.getCodeCommuneAvantEven().substring(0, 2));
+		    commune.setDepartement(historique.getDepartementAvantEven());
 		    commune.setTypeNomClair(metadataService.getTypeNomClair(historique.getTypeNomClairAv()));		    
 		    commune.setNomEnrichi(historique.getNomClairTypographieRicheAv());
 		    commune.setNomMajuscule(historique.getNomClairMajAv());
@@ -429,7 +443,7 @@ public class HistoriqueCommuneInseeImportRules {
 	    commune.setTypeEntiteAdmin(metadataService.getTypeEntiteAdmin("COM"));
 	    commune.setDebutValidite(historique.getDateEffet());
 	    commune.setCodeInsee(historique.getCodeCommuneaprEven());
-	    commune.setDepartement(historique.getCodeCommuneaprEven().substring(0, 2));
+	    commune.setDepartement(historique.getDepartementAprEven());
 	    commune.setTypeNomClair(metadataService.getTypeNomClair(historique.getTypeNomClairAp()));
 	    commune.setNomEnrichi(historique.getNomClairTypographieRicheAp());
 	    commune.setNomMajuscule(historique.getNomClairMajAp());
