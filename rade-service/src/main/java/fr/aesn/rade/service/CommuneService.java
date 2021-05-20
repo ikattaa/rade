@@ -167,6 +167,18 @@ public interface CommuneService {
     throws InvalidArgumentException;
 
   /**
+   * Creates (MOD=30 : Suppression)
+   * @param dateEffective the date that the change takes effect.
+   * @param audit audit details about change.
+   * @param codeInsee the code of the commune.
+   * @return the new Commune.
+   * @throws InvalidArgumentException if an invalid argument has been passed.
+   */
+  public Commune mod30Supression(Date dateEffective, Audit audit,
+                                String codeInsee)
+    throws InvalidArgumentException;
+
+  /**
    * Merges (MOD=310 : Fusion Commune absorbe, MOD=320 : Fusion Commune
    * absorbante) the given Communes, effective as of the given Date.
    * @param dateEffective the date that the change takes effect.

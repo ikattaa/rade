@@ -388,6 +388,38 @@ public class CommuneServiceImpl
     // add genealogie
     buildGenealogie(parentSource, enfantRetabli, "21", commentaire);
   }
+  
+  
+  /**
+   * Creates (MOD=30 : Suppression)
+   * @param dateEffective the date that the change takes effect.
+   * @param audit audit details about change.
+   * @param codeInsee the code of the Commune.
+   * @return the new Commune.
+   * @throws InvalidArgumentException if an invalid argument has been passed.
+   */
+  @Override
+  @Transactional(readOnly = false)
+  public Commune mod30Supression(Date dateEffective, Audit audit,
+      String codeInsee)
+    throws InvalidArgumentException {
+    // validate arguments
+    if (dateEffective == null || audit == null) {
+      throw new InvalidArgumentException("The date and audit are mandatory.");
+    }
+    if (codeInsee == null) {
+      throw new InvalidArgumentException(
+              "A mandatory detail was null");
+    }
+
+    log.info("Mod=30 (Suppression) requested: date={}, code commune={}",
+             dateEffective, codeInsee);
+    // invalidate commune
+    Commune parent = invalidateCommune(codeInsee, dateEffective);
+
+    return getCommuneById(parent.getId());
+  }
+  
 
   /**
    * Merges (MOD=31 : Fusion Commune absorbe, MOD=32 : Fusion Commune

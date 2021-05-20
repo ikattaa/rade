@@ -135,6 +135,24 @@ public class HistoriqueCommuneInseeModel implements Serializable {
   /** LIBELLE_AP - Nom en clair (typographie riche) avec article. */
   @Size(max = 200)
   private String  nomClairTypographieRicheAvecArticleAp;
+  
+  /**
+   * Returns the departement before event.
+   * @return the departement before event.
+   */
+  public String getDepartementAvantEven() {
+    if(codeCommuneAvantEven.startsWith("97")) return codeCommuneAvantEven.substring(0, 3);
+    else return codeCommuneAvantEven.substring(0, 2);
+  }
+  
+  /**
+   * Returns the departement after event.
+   * @return the departement after event.
+   */
+  public String getDepartementAprEven() {
+    if(codeCommuneaprEven.startsWith("97")) return codeCommuneaprEven.substring(0, 3);
+    else return codeCommuneaprEven.substring(0, 2);
+  }
 
   /**
    * Pair of INSEE Commune History records that are associated.
@@ -178,6 +196,7 @@ public class HistoriqueCommuneInseeModel implements Serializable {
     public Date getDateEffet() {
       return isValid() ? parent.getDateEffet() : null;
     }
+    
   }
 
   /**
