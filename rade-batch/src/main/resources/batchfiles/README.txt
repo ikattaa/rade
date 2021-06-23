@@ -40,3 +40,12 @@
 	et la suppression de 2 communes (opération code 30).
 	Ce fichier doit être importé avec la date du 01/01/1976 (date de la plus ancienne modification du fichier).
 	Il peut êtré importé avant ou après le fichier d'historique de l'insee.
+
+*** RADE-Change-686_Maj_date_debut_commune.sql :
+	Le fichier initial d'import des communes de 1999 ne contient pas la date de création de communes.
+	Le champ "date de validité" des communes de 1999 a été initialisé par convention au "01/01/99".
+	Ce script SQL permet d'initialiser la date réelle de début de validité des communes de 1999.
+	Il peut être exécuté juste après l'import des communes de 1999.
+	Réserve : le script a été réalisé manuellement. Les dates seraient plus fiables si elles étaient initialisées via un algorithme
+		qui utiliserait le fichier d'historique.
+	
