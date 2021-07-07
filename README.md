@@ -39,3 +39,15 @@ Pour lancer un batch en ligne de commande:
 ```sh
 $ java -jar rade-batchrunner/target/rade-batchrunner.jar -h
 ```
+
+# Fichiers INSEE
+
+Nous avons corrigé les fichiers INSEE pour pouvoir réaliser un import complet à partir des données de 1999 sans erreur.
+Les fichiers modifiés sont présents ici :
+https://github.com/https-github-com-RadeTeam/rade/tree/master/rade-batch/src/main/resources/batchfiles
+
+Ces fichiers sont décrits dans le fichier suivant :
+https://github.com/https-github-com-RadeTeam/rade/blob/master/rade-batch/src/main/resources/batchfiles/README.txt
+
+La procédure d'import est décrite ici :
+TODO
