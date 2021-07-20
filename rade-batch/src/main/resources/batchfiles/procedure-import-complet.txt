@@ -1,5 +1,6 @@
 ﻿********* Les étapes à suivre afin d'effectuer un import complet pour rade sont les suivantes: 
 1- Prérequis
+
 *** Télécharger le fichier [comsimp1999.txt] : [https://github.com/https-github-com-RadeTeam/rade/tree/master/rade-batch/src/main/resources/batchfiles]
 
 *** Télécharger le fichier [mvtcommunes-97.csv] : [https://github.com/https-github-com-RadeTeam/rade/tree/master/rade-batch/src/main/resources/batchfiles]
