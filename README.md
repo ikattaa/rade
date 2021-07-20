@@ -50,4 +50,4 @@ Ces fichiers sont décrits dans le fichier suivant :
 https://github.com/https-github-com-RadeTeam/rade/blob/master/rade-batch/src/main/resources/batchfiles/README.txt
 
 La procédure d'import est décrite ici :
-TODO
+https://github.com/https-github-com-RadeTeam/rade/tree/master/rade-batch/src/main/resources/batchfiles\procedure-import-complet.txt
