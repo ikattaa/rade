@@ -1,41 +1,38 @@
-﻿********* Les étapes à suivre afin d'effectuer un import complet pour rade sont les suivantes: 
-1- Prérequis
+﻿*** Les étapes à suivre afin d'effectuer un import complet pour rade sont les suivantes: ***
 
-*** Télécharger le fichier [comsimp1999.txt] : [https://github.com/https-github-com-RadeTeam/rade/tree/master/rade-batch/src/main/resources/batchfiles]
+1- Prérequis :
+	1-1- Télécharger le fichier [comsimp1999.txt] : https://github.com/https-github-com-RadeTeam/rade/tree/master/rade-batch/src/main/resources/batchfiles/comsimp1999.txt
+	1-2- Télécharger le fichier [mvtcommunes-97.csv] : https://github.com/https-github-com-RadeTeam/rade/tree/master/rade-batch/src/main/resources/batchfiles/mvtcommunes-97.csv
+	1-3- Télécharger le fichier [RADE-Change-686_Maj_date_debut_commune.sql] : https://github.com/https-github-com-RadeTeam/rade/tree/master/rade-batch/src/main/resources/batchfiles/RADE-Change-686_Maj_date_debut_commune.sql
+	1-4-Télécharger le dernier fichier d'historique depuis le site de l'insee : https://www.insee.fr/fr/information/2560686#titre-bloc-11
 
-*** Télécharger le fichier [mvtcommunes-97.csv] : [https://github.com/https-github-com-RadeTeam/rade/tree/master/rade-batch/src/main/resources/batchfiles]
+2- Se connecter à l’application Rade.
 
-*** Télécharger le fichier [RADE-Change-686_Maj_date_debut_commune.sql] : [https://github.com/https-github-com-RadeTeam/rade/tree/master/rade-batch/src/main/resources/batchfiles]
+3- Import du fichier comsimp1999.txt :
+	3-1- Accéder au menu administration et cliquer sur Batchs. Cliquer ensuite sur le lien « Batch Import Communes INSEE »,
+		une nouvelle fenêtre s'ouvre indiquant des champs à renseigner.
+	3-2- Saisir la date de début suivante : 01/01/1999
+	3-3- Choisir le fichier : Cliquer sur parcourir puis sélectionner le fichier comsimp1999.txt précédement téléchargé.
+	3-4- Cliquer sur envoyer afin de lancer l'import.
+	3-5- Pour suivre la progression du traitement, accéder au menu administration puis cliquer sur "Logs rade".
 
-*** Télécharger le dernier fichier d'historique depuis le site de l'insee : https://www.insee.fr/fr/information/2560686#titre-bloc-11
-
-1- Se connecter à l’application Rade
-
-2- Import du fichier comsimp1999.txt :
-	2-1- Accéder au menu administration et cliquer sur Batchs. Cliquer ensuite sur le lien « Batch Import Communes INSEE »,
-		une nouvelle fenetre s'ouvre indiquant des champs à renseigner.
-	2-2- Saisir la date de début suivante : 01/01/1999
-	2-3- Choisir le fichier : Cliquer sur parcourir puis sélectionner le fichier comsimp1999.txt précédement téléchargé.
-	2-4- Cliquer sur envoyer afin de lancer l'import.
-	2-5- Pour suivre la progression du traitement, accéder au menu administration puis cliquer sur "Logs rade".
-
-3- Lancement du script RADE-Change-686_Maj_date_debut_commune.sql
-	3-1 Se connecter au server base de données Rade avec un user ayant des accès d’exécution du script.
-	3-2 Excuter la commande suivante (en remplaçant les variables qui commencent par $): 
+4- Lancement du script RADE-Change-686_Maj_date_debut_commune.sql :
+	4-1 Se connecter au server base de données Rade avec un user ayant des accès d’exécution du script.
+	4-2 Excuter la commande suivante (en remplaçant les variables qui commencent par $): 
 		sqlplus $user/$password@$BaseDeDonnees @RADE-Change-686_Maj_date_debut_commune.sql
 
-4- Import du fichier mvtcommunes-97.csv :
-	4-1- Accéder au menu administration et cliquer sur Batchs. Cliquer ensuite sur le lien« Batch Import Historique INSEE»,
-	une nouvelle fenetre s'ouvre indiquant des champs à renseigner.
-	4-2- Saisir la date de début: 01/01/1976 (date de la plus ancienne modification du fichier) 
-	4-3- Choisir le fichier : Cliquer sur parcourir puis sélectionner le fichier mvtcommunes-97.csv précédement téléchargé.
-	4-4- Cliquer sur envoyer afin de lancer l'import.
-	4-5- Pour suivre la progression du traitement, accéder au menu administration puis cliquer sur "Logs rade".
-
-5- Import du fichier fichier d'historique le plus récent:
-	5-1- Accéder au menu administration et cliquer sur Batchs. Cliquer ensuite sur le lien « Batch Import Historique INSEE»,
+5- Import du fichier mvtcommunes-97.csv :
+	5-1- Accéder au menu administration et cliquer sur Batchs. Cliquer ensuite sur le lien« Batch Import Historique INSEE»,
 	une nouvelle fenêtre s'ouvre indiquant des champs à renseigner.
-	5-2- Saisir la date de début: 02/01/1999
-	5-3- Choisir le fichier : Cliquer sur parcourir puis sélectionner le fichier précédement téléchargé.
+	5-2- Saisir la date de début: 01/01/1976 (date de la plus ancienne modification du fichier) 
+	5-3- Choisir le fichier : Cliquer sur parcourir puis sélectionner le fichier mvtcommunes-97.csv précédement téléchargé.
 	5-4- Cliquer sur envoyer afin de lancer l'import.
 	5-5- Pour suivre la progression du traitement, accéder au menu administration puis cliquer sur "Logs rade".
+
+6- Import du fichier fichier d'historique le plus récent:
+	6-1- Accéder au menu administration et cliquer sur Batchs. Cliquer ensuite sur le lien « Batch Import Historique INSEE»,
+	une nouvelle fenêtre s'ouvre indiquant des champs à renseigner.
+	6-2- Saisir la date de début: 02/01/1999
+	6-3- Choisir le fichier : Cliquer sur parcourir puis sélectionner le fichier précédement téléchargé.
+	6-4- Cliquer sur envoyer afin de lancer l'import.
+	6-5- Pour suivre la progression du traitement, accéder au menu administration puis cliquer sur "Logs rade".
