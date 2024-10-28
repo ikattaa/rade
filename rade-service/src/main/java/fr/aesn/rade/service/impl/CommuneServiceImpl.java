@@ -357,13 +357,16 @@ public class CommuneServiceImpl
     }
     Commune commune = communeJpaDao.findByCodeInseeValidOnDate(com21retabli.getCodeInsee(), dateEffective);
     if ((commune != null)) {
-    	if(!com21retabli.getCodeInsee().equals(com21source.getCodeInsee())||(!com21source.getNomEnrichi().equals(commune.getNomEnrichi()))) {
+        throw new InvalidArgumentException(
+    	              "Commune rétabli already exists for the given date.");
+         }
+    	/*if(!com21retabli.getCodeInsee().equals(com21source.getCodeInsee())||(!com21source.getNomEnrichi().equals(commune.getNomEnrichi()))) {
     		log.error(" commune :"+commune.getCodeInsee() +"nom :"+commune.getNomEnrichi());
     	      throw new InvalidArgumentException(
     	              "Commune rétabli already exists for the given date.");
     	}
-    
-    }
+        */
+   
     if (com21source == null || com21source.getCodeInsee() == null
             || com21source.getDepartement() == null
             || com21source.getTypeNomClair() == null
